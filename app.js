@@ -17,8 +17,6 @@ app.locals.db = db;
 app.use(express.json());
 app.use(compression());
 
-
-
 // Logging
 app.use(morgan);
 

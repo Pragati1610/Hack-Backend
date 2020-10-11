@@ -35,6 +35,7 @@ class AuthController {
 	static async getAuthByEmail(authEmail) {
 		try {
 			const Auth = await Auth.findOne({ where: {email: authEmail}});
+			console.log(authEmail);
 			return Auth;
 		} catch (e) {
 			logger.error(e);
@@ -74,3 +75,5 @@ class AuthController {
 
 
 }
+
+module.exports = AuthController;
