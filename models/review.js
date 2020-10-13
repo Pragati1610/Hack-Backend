@@ -8,12 +8,17 @@ const schema = {
 	reviewNo: {type: DataTypes.INTEGER, allowNull: false}
 };
 
-const Review = sequelize.define('Review', schema);
+const options = {
+  timestamps: false
+};
 
-Events.hasMany(Review);
+const Review = sequelize.define('Review', schema, options);
 
-Review.sync({
+if(process.env.SYNC){
+	Review.sync({
 	alter: true
 });
+}
+
 
 module.exports = Review;

@@ -8,13 +8,16 @@ const schema = {
 	commentBody: {type: DataTypes.STRING, allowNull: false}
 };
 
-const Comments = sequelize.define('Comments', schema);
+const options = {
+  timestamps: false
+};
 
-Team.hasMany(Comments);
-Review.hasMany(Comments);
+const Comments = sequelize.define('Comments', schema, options);
 
-Comments.sync({
+if(process.env.SYNC){
+	Comments.sync({
 	alter: true
 });
+}
 
 module.exports = Comments;

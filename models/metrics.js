@@ -8,12 +8,16 @@ const schema = {
 	maxScore: {type: DataTypes.INTEGER, allowNull: false}
 };
 
-const Metrics = sequelize.define('Metrics', schema);
+const options = {
+  timestamps: false
+};
 
-Events.hasMany(Metrics);
+const Metrics = sequelize.define('Metrics', schema, options);
 
-Metrics.sync({
+if(process.env.SYNC){
+	Metrics.sync({
 	alter: true
 });
+}
 
 module.exports = Metrics;

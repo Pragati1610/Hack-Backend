@@ -21,8 +21,8 @@ class AuthController {
 
 	static async getAuth(authId) {
 		try {
-			const Auth = await Auth.findById(authId);
-			return Auth;
+			const auth = await Auth.findById(authId);
+			return auth;
 		} catch (e) {
 			logger.error(e);
 			return {
@@ -34,9 +34,8 @@ class AuthController {
 
 	static async getAuthByEmail(authEmail) {
 		try {
-			const Auth = await Auth.findOne({ where: {email: authEmail}});
-			console.log(authEmail);
-			return Auth;
+			const auth = await Auth.findOne({ where: {email: authEmail}});
+			return auth;
 		} catch (e) {
 			logger.error(e);
 			return {

@@ -8,10 +8,17 @@ const schema = {
 	isAdmin: {type: DataTypes.BOOLEAN, allowNull: false}
 };
 
-const auth = sequelize.define('Auth', schema);
+const options = {
+  timestamps: false
+};
 
-auth.sync({
+const auth = sequelize.define('Auth', schema, options);
+
+if(process.env.SYNC){
+	auth.sync({
 	alter: true
-});
+	});
+}
+
 
 module.exports = auth;

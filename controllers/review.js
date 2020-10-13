@@ -1,10 +1,11 @@
-const Team = require("../models/team");
+const Review = require("../models/review");
 const logger = require("../logging/logger");
 
-class TeamController {
-	static async createTeam(team){
+class ReviewController {
+	static async createReview(Event){
 		try {
-			const createdTeam = await Team.create(team);
+			
+			const createdReview = await Review.create();
 			return {
 				message: "Team created",
 				createdTeam
@@ -59,4 +60,4 @@ class TeamController {
 
 }
 
-module.exports = TeamController;
+module.exports = ReviewController;

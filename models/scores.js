@@ -9,14 +9,17 @@ const schema = {
 	score: {type: DataTypes.INTEGER, allowNull: false}
 };
 
-const Scores = sequelize.define('Scores', schema);
+const options = {
+  timestamps: false
+};
 
-Review.hasMany(Scores);
-Metrics.hasMany(Scores);
-Team.hasMany(Scores);
+const Scores = sequelize.define('Scores', schema, options);
 
-Scores.sync({
+if(process.env.SYNC){
+	Scores.sync({
 	alter: true
 });
+}
+
 
 module.exports = Scores;

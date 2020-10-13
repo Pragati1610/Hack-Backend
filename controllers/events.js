@@ -1,10 +1,13 @@
 const Events = require("../models/events");
+const Team = require("../models/team");
+const Review = require("../models/review");
 const logger = require("../logging/logger");
+const { QueryTypes } = require('sequelize');
 
 class EventsController {
 	static async createEvent(event){
 		try {
-			const createdEvent = await event.create(event);
+			const createdEvent = await Events.create(event); 
 			return {
 				message: "event created",
 				createdEvent
@@ -20,7 +23,7 @@ class EventsController {
 
 	static async getEvent(eventId) {
 		try {
-			const event = await event.findById(eventId);
+			const event = await Events.findById(eventId);
 			return event;
 		} catch (e) {
 			logger.error(e);
@@ -33,8 +36,15 @@ class EventsController {
 
 	static async getAllEvents() {
 		try {
-			const event = await event.findAll();
-			return event;
+			const events = await Events.findAll({
+			    attributes: { 
+			        include: [[Sequelize.fn("COUNT", Sequelize.col("teams.team_id")), "teamCount"]] 
+			    },
+			    include: [{
+			        model: Team, attributes: []
+			    }]
+			});
+			return events;
 		} catch (e) {
 			logger.error(e);
 			return {
@@ -46,7 +56,7 @@ class EventsController {
 
 	static async updateEvent(event) {
 		try {
-			const updatedEvent = await event.update(event, { where: { eventId: event.eventId }});
+			const updatedEvent = await Events.update(event, { where: { eventId: event.eventId }});
 			return updatedEvent;
 		} catch (e) {
 			logger.error(e);
@@ -57,9 +67,9 @@ class EventsController {
 		}	
 	}
 
-	static async deleteevent(eventId) {
+	static async deleteEvent(eventId) {
 		try {
-			await event.destroy({ where: {eventId: eventId}});
+			await Events.destroy({ where: {eventId: eventId}});
 			return {message: "deleted event"};
 		} catch (e) {
 			logger.error(e);

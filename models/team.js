@@ -9,12 +9,16 @@ const schema = {
 	link: {type: DataTypes.STRING},
 };
 
-const Team = sequelize.define('Team', schema);
+const options = {
+  timestamps: false
+};
 
-Events.hasMany(Team);
+const Team = sequelize.define('Team', schema, options);
 
-Team.sync({
+if(process.env.SYNC){
+	Team.sync({
 	alter: true
 });
+}
 
 module.exports = Team;
