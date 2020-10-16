@@ -3,9 +3,9 @@ const compression = require('compression');
 const db = require('./db/db');
 const cors = require('cors');
 
-require("./models/relations");
+require('./models/relations');
 
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 
 const morgan = require('./logging/morgan');
@@ -13,9 +13,12 @@ const morgan = require('./logging/morgan');
 const auth = require('./routes/auth');
 const team = require('./routes/team');
 const event = require('./routes/events');
+const scores = require('./routes/scores');
+const review = require('./routes/review');
 
 const app = express();
 
+// connection
 app.locals.db = db;
 
 // Middlewares
@@ -30,8 +33,7 @@ app.use(morgan);
 app.use('/auth', auth);
 app.use('/team', team);
 app.use('/event', event);
-
+app.use('/scores', scores);
+app.use('/review', review);
 
 module.exports = app;
-
-

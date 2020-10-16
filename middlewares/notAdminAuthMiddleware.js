@@ -7,10 +7,10 @@ const adminAuth = (req, res, next) => {
     const token = req.get('Authorization');
     const claims = jwt.verify(token, process.env.JWT_PASS);
     const user = claims;
-    if (!user.isAdmin) {
+    if (user.isAdmin) {
       return res
         .status(403)
-        .json({ message: 'You are forbidden from modifying this resource' });
+        .json({ message: 'Please login as participant' });
     } else {
       next();
     }
