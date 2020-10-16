@@ -1,11 +1,11 @@
-const {Sequelize, DataTypes} = require("sequelize");
-const sequelize = require("../db/db");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
 const schema = {
-	eventId: {type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true}, 
-	eventName: {type: DataTypes.STRING, allowNull: false},
-	problemStatements: {type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false},
-	dateOfEvent: {type: DataTypes.DATE, allowNull: false},	
+  eventId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
+  eventName: { type: DataTypes.STRING, allowNull: false },
+  problemStatements: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
+  dateOfEvent: { type: DataTypes.DATE, allowNull: false }
 };
 
 const options = {
@@ -13,12 +13,5 @@ const options = {
 };
 
 const Events = sequelize.define('Event', schema, options);
-
-if(process.env.SYNC){
-	Events.sync({
-	alter: true
-});
-
-}
 
 module.exports = Events;

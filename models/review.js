@@ -1,11 +1,11 @@
-const {Sequelize, DataTypes} = require("sequelize");
-const sequelize = require("../db/db");
-const Events = require("./events");
-const Team = require("./team");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
+const Events = require('./events');
+const Team = require('./team');
 
 const schema = {
-	reviewId: {type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true},
-	reviewNo: {type: DataTypes.INTEGER, allowNull: false}
+  reviewId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
+  reviewNo: { type: DataTypes.INTEGER, allowNull: false }
 };
 
 const options = {
@@ -13,12 +13,5 @@ const options = {
 };
 
 const Review = sequelize.define('Review', schema, options);
-
-if(process.env.SYNC){
-	Review.sync({
-	alter: true
-});
-}
-
 
 module.exports = Review;

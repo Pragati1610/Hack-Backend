@@ -1,11 +1,11 @@
-const {Sequelize, DataTypes} = require("sequelize");
-const sequelize = require("../db/db");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
 const schema = {
-	authId: {type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true}, 
-	email: {type: DataTypes.STRING, allowNull: false},
-	password: {type: DataTypes.STRING, allowNull: false},
-	isAdmin: {type: DataTypes.BOOLEAN, allowNull: false}
+  authId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
+  email: { type: DataTypes.STRING, allowNull: false },
+  password: { type: DataTypes.STRING, allowNull: false },
+  isAdmin: { type: DataTypes.BOOLEAN, allowNull: false }
 };
 
 const options = {
@@ -13,12 +13,5 @@ const options = {
 };
 
 const auth = sequelize.define('Auth', schema, options);
-
-if(process.env.SYNC){
-	auth.sync({
-	alter: true
-	});
-}
-
 
 module.exports = auth;
