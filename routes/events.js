@@ -9,7 +9,7 @@ router.post('/createEvent', [jwtAuth, adminAuth], async (req, res) => {
   return res.status(response.isError ? 400 : 200).send(response);
 });
 
-router.get('/allEvents', [jwtAuth, adminAuth], async (req, res) => {
+router.get('/allEvents', [jwtAuth], async (req, res) => {
   const response = await events.getAllEvents();
   return res.status(response.isError ? 400 : 200).send(response);
 });

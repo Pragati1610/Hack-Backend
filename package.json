@@ -24,6 +24,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "codecov": "^3.7.1",
+    "express-swagger-generator": "^1.1.17",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.3",
     "nyc": "^15.0.0",
