@@ -1,4 +1,4 @@
-const { Events, Metrics, Team, Review } = require('../models/relations');
+const { Events, Metrics, Team, Review, Metrics } = require('../models/relations');
 const logger = require('../logging/logger');
 const { QueryTypes, Sequelize } = require('sequelize');
 
@@ -62,10 +62,13 @@ class EventsController {
 
       const eventIds = events.map(event => event.eventId);
       const reviews = await Review.findAll({where: {eventId: eventIds}, raw: true});
+      const metrics = await Metrics.findAll({where: {eventId: eventIds}, raw: true});
 
       events = events.map(event => {
         let eventReview = reviews.filter(review => review.eventId === event.eventId);
+        let eventMetric = metrics.filter(metric => metric.eventId === event.eventId);
         event.reviews = eventReview;
+        event.metrics = eventMetric;
         return event;
       });
       console.log(events);
