@@ -1,4 +1,4 @@
-const { Events, Metrics, Team, Review, Metrics } = require('../models/relations');
+const { Events, Metrics, Team, Review } = require('../models/relations');
 const logger = require('../logging/logger');
 const { QueryTypes, Sequelize } = require('sequelize');
 
