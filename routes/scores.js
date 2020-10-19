@@ -20,9 +20,6 @@ router.patch('/updateTeamComment', [jwtAuth, adminAuth], async (req, res) => {
   const response = await score.updateTeamComment(req.body);
   return res.status(response.isError ? 400 : 200).send(response);
 });
-// router.get('/getTeamScore/:reviewId/:rank', [jwtAuth, adminAuth], async (req, res) => {
-//   const response = await score.getTeamScore(req.params);
-//   return res.status(response.isError ? 400 : 200).send(response);
-// });
+
 module.exports = router;
 
