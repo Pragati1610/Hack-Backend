@@ -35,7 +35,8 @@ class EventsController {
     try {
       const event = await Events.findByPk(eventId);
       const review = await Review.findAll({where: {eventId}});
-      return {event, review};
+      const metric = await Metric.findAll({where: {eventId}});
+      return {event, review, metric};
     } catch (e) {
       logger.error(e);
       return {
