@@ -109,3 +109,4 @@ dist
 
 # SSL Certificates
 certs/
+sendgrid.env
