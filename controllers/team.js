@@ -1,22 +1,7 @@
-const { Team, Review, OverAllScore, ParticipantTeam } = require('../models/relations');
+const { Team, Review, OverAllScore, ParticipantTeam, Comments } = require('../models/relations');
 const logger = require('../logging/logger');
 
 class TeamController {
-    static async createTeam(team) {
-        try {
-            const createdTeam = await Team.create(team);
-            return {
-                message: 'Team created',
-                createdTeam
-            };
-        } catch (e) {
-            logger.error(e);
-            return {
-                isError: true,
-                message: e.toString()
-            };
-        }
-    }
 
     static async getAllTeams(eventId) {
         try {
@@ -31,73 +16,19 @@ class TeamController {
         }
     }
 
-
-    // static async getTeam(teamId) {
-    //     try {
-    //         const team = await Team.findByPk(teamId);
-    //         return team;
-    //     } catch (e) {
-    //         logger.error(e);
-    //         return {
-    //             isError: true,
-    //             message: e.toString()
-    //         };
-    //     }
-    // }
-
-    // not working
-
-    // static async updateTeam(team, authId) {
-    //     try {
-    //         const members = await ParticipantTeam.findAll({ where: { TeamTeamId: team.teamId }, attributes: ['AuthAuthId'], raw: true });
-    //         console.log(members);
-    //         if (!(members.AuthAuthId === authId)) {
-    //             return {
-    //                 message: "This is not you team, you are not authorized to change these resources",
-    //                 isError: true
-    //             }
-    //         }
-    //         const updatedTeam = await Team.update(team, { where: { teamId: team.teamId } });
-    //         return updatedTeam;
-    //     } catch (e) {
-    //         logger.error(e);
-    //         return {
-    //             isError: true,
-    //             message: e.toString()
-    //         };
-    //     }
-    // }
-
-    // static async deleteTeam(teamId, authId) {
-    //     try {
-    //         let team = await ParticipantTeam.findOne({ TeamTeamId: teamId, AuthAuthId: authId });
-    //         if (!team) {
-    //             return {
-    //                 message: "You are not authorized to delete this resource",
-    //                 isError: true
-    //             }
-    //         }
-    //         await Team.destroy({ where: { teamId: teamId } });
-    //         return { message: 'deleted team' };
-    //     } catch (e) {
-    //         logger.error(e);
-    //         return {
-    //             isError: true,
-    //             message: e.toString()
-    //         };
-    //     }
-    // }
-
-    // reviewId
-
-    static async getEvaluatedTeams(data) {
+    static async getEvaluatedTeams(reviewId) {
         try {
-            const allTeams = await Team.findAll({ where: { reviewId: data.reviewId } });
-            const evalTeams = allTeams.filter(team => {
-                let teamId = team.teamId;
-                let comments = Comments.findAll({ where: { reviewId: data.reviewId, teamId: teamId } });
-                return (comments);
-            });
+            const review = await Review.findOne({ where: { reviewId } });
+            const allComments = await Comments.findAll({ where: { reviewId }, raw: true });
+            const evalTeams = await Promise.all(allComments.map(async(comment) => {
+                return await Team.findOne({
+                    where: {
+                        teamId: comment.teamId,
+                        eventId: review.eventId
+                    },
+                    raw: true
+                });
+            }));
             return evalTeams;
         } catch (e) {
             logger.error(e);
@@ -108,15 +39,27 @@ class TeamController {
         }
     }
 
-    static async getUnEvaluatedTeams(data) {
+    static async getUnEvaluatedTeams(reviewId) {
         try {
-            const allTeams = await Team.findAll({ where: { reviewId: data.reviewId } });
-            const evalTeams = allTeams.filter(team => {
-                let teamId = team.teamId;
-                let comments = Comments.findAll({ where: { reviewId: data.reviewId, teamId: teamId } });
-                return (!comments);
-            });
-            return evalTeams;
+            const review = await Review.findOne({ where: { reviewId } });
+            let evaluatedTeams = Array.from(await this.getEvaluatedTeams(reviewId));
+            let unEvaluatedTeams;
+            evaluatedTeams = evaluatedTeams.map(JSON.stringify);
+            if (review.reviewNo === 1) {
+                const allTeams = await Team.findAll({ where: { eventId: review.eventId }, raw: true });
+                unEvaluatedTeams = allTeams.filter(x => {
+                    return !evaluatedTeams.includes(JSON.stringify(x));
+                });
+
+            } else {
+                const prevReviewNo = review.reviewNo - 1;
+                const prevReview = await Review.findOne({ where: { eventId: review.eventId, reviewNo: prevReviewNo } });
+                const qualifiedTeams = await Review.findAll({ where: { reviewId: prevReview.reviewId }, raw: true });
+                unEvaluatedTeams = qualifiedTeams.filter(x => !evaluatedTeams.includes(JSON.stringify(x)));
+            }
+            return {
+                unEvaluatedTeams
+            }
         } catch (e) {
             logger.error(e);
             return {
@@ -129,9 +72,6 @@ class TeamController {
 
     static async getQualifiedTeams(data) {
         try {
-
-            // data.rank data.reviewId
-
             const review = await Review.findByPk(data.reviewId);
             let totalScore;
 

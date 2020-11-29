@@ -5,7 +5,6 @@ class ScoreController {
     static async createTeamScore(data) {
         try {
             const review = await Review.findOne({ where: { eventId: data.eventId, reviewNo: data.reviewNo } });
-            console.log(review);
             const scores = data.scores.map(score => {
                 score["reviewId"] = review.reviewId;
                 score["teamId"] = data.teamId;
@@ -65,11 +64,13 @@ class ScoreController {
 
     static async updateTeamScore(scores) {
         try {
-            const updateScore = await Scores.bulkCreate(scores, { updateOnDuplicate: ["score"] });
+            const updateScore = await Scores.bulkCreate(scores, { updateOnDuplicate: ["score"], fields: ["scoreId", "score"] });
+            console.log(updateScore);
             let totalScore = 0;
             updateScore.forEach(score => {
                 totalScore += parseInt(score.score);
             });
+            console.log(updateScore);
             const finalScore = {
                 totalScore,
                 reviewId: updateScore[0].reviewId,
@@ -98,7 +99,7 @@ class ScoreController {
 
     static async updateTeamComment(data) {
         try {
-            const updateComments = await Comments.update(data, { where: { commentId: data.commentId } }, { updateOnDuplicate: ["commentBody"] });
+            const updateComments = await Comments.update(data, { where: { commentId: data.commentId } });
             return updateComments;
         } catch (e) {
             logger.error(e);
