@@ -16,6 +16,7 @@ const event = require('./routes/events');
 const scores = require('./routes/scores');
 const review = require('./routes/review');
 const p_t = require('./routes/participantTeam');
+const comments = require('./routes/comments');
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use('/participantTeam', p_t);
 app.use('/team', team);
 app.use('/scores', scores);
 app.use('/review', review);
+app.use('/comments', comments);
 
 module.exports = app;
