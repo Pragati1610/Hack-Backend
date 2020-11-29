@@ -14,8 +14,13 @@ router.post('/joinTeam', [jwtAuth, notAdmin], async(req, res) => {
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
-router.post('/getMembers', [jwtAuth, notAdmin], async(req, res) => {
-    const response = await p_t.getMembers(req.body.teamId, req.user.authId);
+router.get('/getMembers/:teamId', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.getMembers(req.params.teamId, req.user.authId);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
+
+router.get('/getNonWaitingMembers/:teamId', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.getNonWaitingMembers(req.params.teamId, req.user.authId);
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
@@ -25,7 +30,7 @@ router.post('/addTeamMember', [jwtAuth, notAdmin], async(req, res) => {
 });
 
 router.post('/removeMember', [jwtAuth, notAdmin], async(req, res) => {
-    const response = await p_t.removeMember(req.body.waitingMemberAuthId, req.user.authId, req.body.teamId);
+    const response = await p_t.removeMember(req.body.memberAuthId, req.user.authId, req.body.teamId);
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
@@ -35,7 +40,17 @@ router.post('/leaveTeam', [jwtAuth, notAdmin], async(req, res) => {
 });
 
 router.delete('/deleteTeam', [jwtAuth, notAdmin], async(req, res) => {
-    const response = await p_t.leaveTeam(req.body.teamId, req.user.authId);
+    const response = await p_t.deleteTeam(req.body.teamId, req.user.authId);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
+
+router.patch('/updateTeam', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.updateTeam(req.body, req.user.authId);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
+
+router.get('/:teamId', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.getTeam(req.params.teamId, req.user.authId);
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
