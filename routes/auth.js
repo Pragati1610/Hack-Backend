@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require("express-validator");
+const { Auth } = require('../models/relations');
 
 // mail validation
 // oAuth2 - firebase 
@@ -61,5 +62,13 @@ router.post('/login', async(req, res) => {
         return res.status(401).send({ message: "User not authorized" })
     }
 });
+
+
+
+router.post('/findByAuthId', async(req, res) => {
+    const user = await Auth.findOne({ where: { authId: req.body.authId } });
+    return res.status(200).send(user);
+})
+
 
 module.exports = router;

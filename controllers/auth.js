@@ -44,6 +44,12 @@ class AuthController {
     static async getAuthByEmail(auth) {
         try {
             const user = await Auth.findOne({ where: { email: auth.email, isAdmin: auth.isAdmin } });
+            if (!user) {
+                return {
+                    message: "User doesn't exist",
+                    isError: true
+                }
+            }
             return user;
         } catch (e) {
             logger.error(e);

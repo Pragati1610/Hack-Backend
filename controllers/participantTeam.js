@@ -4,8 +4,7 @@ const logger = require('../logging/logger');
 class ParticipantTeamController {
     static async createTeam(team, authId, eventId) {
         try {
-
-            let sameTeamName = await Team.findOne({ where: { teamName: team.teamName } });
+            let sameTeamName = await Team.findOne({ where: { teamName: team.teamName, eventId } });
             if (sameTeamName) {
                 return {
                     message: "Team with that name already exists",
@@ -39,7 +38,7 @@ class ParticipantTeamController {
             createdTeam = await Team.create(team);
             await createdTeam.addAuth(auth, { through: { isWaiting: false, isLeader: true } });
             await Team.update({ eventId }, { where: { teamId: createdTeam.teamId } });
-
+            createdTeam.eventId = eventId;
             return {
                 message: 'team created',
                 createdTeam
@@ -53,24 +52,30 @@ class ParticipantTeamController {
         }
     }
 
-    static async joinTeam(teamId, authId, eventId) {
+
+    static async joinTeam(teamId, authId) {
         try {
-            let event = await Events.findByPk(eventId, { include: [{ model: Team }] });
-            let teamIds = event.teams.map((team) => team.teamId);
-            let existingTeam = await ParticipantTeam.findAll({ where: { teamId: teamIds, authId } });
-            if (!existingTeam) {
+            let team = await Team.findByPk(teamId, { raw: true });
+            console.log(team);
+            let eventTeams = await Team.findAll({ where: { eventId: team.eventId }, raw: true });
+            let e_t;
+            let flag = 0;
+            await Promise.all(eventTeams.map(async(team) => {
+                console.log(team)
+                e_t = await ParticipantTeam.findOne({
+                    where: { TeamTeamId: team.teamId, AuthAuthId: authId },
+                    raw: true
+                });
+                if (e_t) {
+                    flag = 1;
+                }
+                return e_t;
+            }));
+            if (!flag) {
                 let team = await Team.findByPk(teamId);
                 if (team) {
-                    let members = await ParticipantTeam.findAll({ where: { teamId, isWaiting: false } });
-                    if (members.length < event.maxTeamSize) {
-                        let auth = await Auth.findOne({ where: { authId } });
-                        await team.addAuth(auth, { through: { isWaiting: true, isLeader: false } });
-                    } else {
-                        return {
-                            isError: true,
-                            message: "Team is full"
-                        }
-                    }
+                    let auth = await Auth.findOne({ where: { authId } });
+                    await team.addAuth(auth, { through: { isWaiting: true, isLeader: false } });
                     return {
                         message: "Request to join the team has been made"
                     }
@@ -99,15 +104,22 @@ class ParticipantTeamController {
 
     static async getMembers(teamId, authId) {
         try {
-            let leader = await ParticipantTeam.findOne({ where: { teamId, authId, isLeader: true } });
+            let team = await Team.findOne({ where: { teamId } });
+            if (!team) {
+                return {
+                    isError: true,
+                    message: "Team doesn't exist"
+                }
+            }
+            let leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isLeader: true } });
             if (!leader) {
                 return {
                     isError: true,
                     message: "You are not authorized to access these resources"
                 }
             } else {
-                let existingMembers = await ParticipantTeam.findAll({ where: { teamId, isWaiting: false } });
-                let waitingMembers = await ParticipantTeam.findAll({ where: { teamId, isWaiting: true } });
+                let existingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false } });
+                let waitingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: true } });
 
                 return {
                     waitingMembers,
@@ -118,27 +130,66 @@ class ParticipantTeamController {
             logger.error(e);
             return {
                 isError: true,
-                message: e.toString()
+                message: e.toString(teamId, authId)
+            };
+        }
+    }
+
+    static async getNonWaitingMembers(teamId, authId) {
+        try {
+            let team = await Team.findOne({ where: { teamId } });
+            if (!team) {
+                return {
+                    isError: true,
+                    message: "Team doesn't exist"
+                }
+            }
+            let leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isWaiting: false } });
+            if (!leader) {
+                return {
+                    isError: true,
+                    message: "You are not authorized to access these resources"
+                }
+            } else {
+                let existingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false } });
+
+                return {
+                    existingMembers
+                }
+            }
+        } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString(teamId, authId)
             };
         }
     }
 
     static async addTeamMember(waitingMemberAuthId, leaderAuthId, teamId) {
         try {
-            let leader = await ParticipantTeam.findOne({ where: { authId: leaderAuthId, teamId, isLeader: true } });
-
+            let leader = await ParticipantTeam.findOne({ where: { AuthAuthId: leaderAuthId, TeamTeamId: teamId, isLeader: true } });
             if (leader) {
-                let searchMember = await ParticipantTeam.findOne({ where: { authId: waitingMemberAuthId, teamId, isWaiting: true } });
+                let searchMember = await ParticipantTeam.findOne({ where: { AuthAuthId: waitingMemberAuthId, TeamTeamId: teamId, isWaiting: true }, raw: true });
                 if (!searchMember) {
                     return {
                         isError: true,
                         message: "Member not found"
                     }
-                } else {
-                    await ParticipantTeam.update({ isWaiting: false }, { where: { authId: waitingMemberAuthId, teamId } });
+                }
+                let members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
+                let team = await Team.findByPk(teamId);
+                let event = await Events.findByPk(team.eventId);
+                if (members.length >= event.maxTeamSize) {
                     return {
-                        message: "Successfully made team member"
+                        isError: true,
+                        message: "Team is full"
                     }
+                }
+
+                await ParticipantTeam.update({ isWaiting: false }, { where: { AuthAuthId: waitingMemberAuthId, TeamTeamId: teamId } });
+                return {
+                    message: "Successfully made team member"
                 }
             } else {
                 return {
@@ -155,19 +206,28 @@ class ParticipantTeamController {
         }
     }
 
-    static async removeMember(waitingMemberAuthId, leaderAuthId, teamId) {
+
+    static async removeMember(memberAuthId, leaderAuthId, teamId) {
         try {
-            let leader = await ParticipantTeam.findOne({ where: { authId: leaderAuthId, teamId, isLeader: true } });
+            let leader = await ParticipantTeam.findOne({ where: { AuthAuthId: leaderAuthId, TeamTeamId: teamId, isLeader: true }, raw: true });
 
             if (leader) {
-                let searchMember = await ParticipantTeam.findOne({ where: { authId: waitingMemberAuthId, teamId } });
+                let searchMember = await ParticipantTeam.findOne({ where: { AuthAuthId: memberAuthId, TeamTeamId: teamId }, raw: true });
                 if (!searchMember) {
                     return {
                         isError: true,
                         message: "Member not found"
                     }
                 } else {
-                    await ParticipantTeam.destroy({ where: { authId: waitingMemberAuthId, teamId } });
+                    await ParticipantTeam.destroy({ where: { AuthAuthId: memberAuthId, TeamTeamId: teamId } });
+                    let members = await ParticipantTeam.findAll({ where: { AuthAuthId: memberAuthId, TeamTeamId: teamId, isWaiting: false }, raw: true });
+                    if (members.length === 0) {
+                        await Team.destroy({ where: { teamId } });
+                        return {
+                            message: "Successfully removed team member, Team became empty so it no longer exists",
+                            isError: true
+                        }
+                    }
                     return {
                         message: "Successfully removed team member"
                     }
@@ -189,19 +249,19 @@ class ParticipantTeamController {
 
     static async leaveTeam(teamId, authId) {
         try {
-            await ParticipantTeam.destroy({ where: { authId, teamId } });
-
-            const members = await ParticipantTeam.findAll({ where: { teamId } });
-            let teamMembersCount;
-            if (members.length === 0) {
+            const members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
+            let teamMemberCount;
+            const leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isLeader: true } });
+            await ParticipantTeam.destroy({ where: { AuthAuthId: authId, TeamTeamId: teamId } });
+            if (members.length === 0 || leader) {
                 await Team.destroy({ where: { teamId } });
-                teamMemberCount = "Team deleted because of absence of members"
+                teamMemberCount = "Team deleted because of absence of members or because leader left"
             } else {
                 teamMembersCount = `${members.length} members left in team`;
             }
             return {
                 message: "Successfully left team",
-                teamMembersCount
+                teamMemberCount
             }
         } catch (e) {
             logger.error(e);
@@ -214,7 +274,7 @@ class ParticipantTeamController {
 
     static async deleteTeam(teamId, authId) {
         try {
-            const team = await ParticipantTeam.findOne({ where: { teamId, authId } });
+            const team = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId } });
             if (!team) {
                 return {
                     message: "Team doesn't exist",
@@ -231,6 +291,50 @@ class ParticipantTeamController {
             return {
                 message: "Team deleted"
             }
+        } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString()
+            };
+        }
+    }
+
+    static async getTeam(teamId, authId) {
+        try {
+            const member = await ParticipantTeam.findOne({ where: { AuthAuthId: authId, TeamTeamId: teamId, isWaiting: false } });
+            if (!member) {
+                return {
+                    message: "You are not authorized to access these resources",
+                    isError: true
+                }
+            }
+            const team = await Team.findByPk(teamId);
+            return team;
+        } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString()
+            };
+        }
+    }
+
+    static async updateTeam(team, authId) {
+        try {
+            const members = await ParticipantTeam.findAll({ where: { TeamTeamId: team.teamId, isWaiting: false }, attributes: ['AuthAuthId'], raw: true });
+            console.log(members[0].AuthAuthId);
+            console.log(authId);
+            let member = await members.filter((mem) => mem.AuthAuthId === authId);
+            console.log(member);
+            if (member.length === 0) {
+                return {
+                    message: "This is not you team, you are not authorized to change these resources",
+                    isError: true
+                }
+            }
+            const updatedTeam = await Team.update(team, { where: { teamId: team.teamId } });
+            return updatedTeam;
         } catch (e) {
             logger.error(e);
             return {

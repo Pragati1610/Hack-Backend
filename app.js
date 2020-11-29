@@ -32,10 +32,10 @@ app.use(morgan);
 
 // Mount routes
 app.use('/auth', auth);
-app.use('/team', team);
 app.use('/event', event);
+app.use('/participantTeam', p_t);
+app.use('/team', team);
 app.use('/scores', scores);
 app.use('/review', review);
-app.use('/participantTeam', p_t);
 
 module.exports = app;
