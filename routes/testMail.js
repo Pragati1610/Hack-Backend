@@ -3,15 +3,15 @@ dotenv.config();
 const sgMail = require('@sendgrid/mail')
 console.log(process.env.SENDGRID_API_KEY)
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-const router = require('express').Router()
+    // const router = require('express').Router()
 const Team = require('../controllers/team');
 const { model } = require('../db/db');
 
-router.post('/:reviewId/:rank', async(req, res) => {
-    console.log(process.env)
-    const response = await Team.getQualifiedTeams(req.params);
-    return res.status(response.isError ? 400 : 200).send(response);
-});
+// router.post('/:reviewId/:rank', async(req, res) => {
+//     console.log(process.env)
+//     const response = await Team.getQualifiedTeams(req.params);
+//     return res.status(response.isError ? 400 : 200).send(response);
+// });
 
 const msg = {
     to: 'pragatibhattad1610@gmail.com', // Change to your recipient
@@ -30,4 +30,4 @@ sgMail
         console.error(error)
     })
 
-module.exports = router;
+// module.exports = router;
