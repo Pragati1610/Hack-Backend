@@ -1,12 +1,14 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const sgMail = require('@sendgrid/mail')
 console.log(process.env.SENDGRID_API_KEY)
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const router = require('express').Router()
 const Team = require('../controllers/team');
-const jwtAuth = require('../middlewares/jwtAuthMiddleware');
-const adminAuth = require('../middlewares/adminAuthMiddleware');
+const { model } = require('../db/db');
 
 router.post('/:reviewId/:rank', async(req, res) => {
+    console.log(process.env)
     const response = await Team.getQualifiedTeams(req.params);
     return res.status(response.isError ? 400 : 200).send(response);
 });
@@ -27,3 +29,5 @@ sgMail
     .catch((error) => {
         console.error(error)
     })
+
+module.exports = router;

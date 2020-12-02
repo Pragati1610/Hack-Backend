@@ -17,6 +17,7 @@ const scores = require('./routes/scores');
 const review = require('./routes/review');
 const p_t = require('./routes/participantTeam');
 const comments = require('./routes/comments');
+// const testMail = require('./routes/testMail');
 
 const app = express();
 
@@ -39,5 +40,6 @@ app.use('/team', team);
 app.use('/scores', scores);
 app.use('/review', review);
 app.use('/comments', comments);
+// app.use('/mail', testMail);
 
 module.exports = app;
