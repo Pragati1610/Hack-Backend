@@ -12,8 +12,6 @@ class EventsController {
             event.Reviews = reviews;
             event.Metrics = event.metrics;
 
-            // bulk create
-
             const createdEvent = await Events.create(event, {
                 include: [Review, Metrics]
             });

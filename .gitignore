@@ -110,3 +110,9 @@ dist
 # SSL Certificates
 certs/
 sendgrid.env
+
+firebase.json
+
+public
+
+public/index.html

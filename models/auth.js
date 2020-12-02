@@ -3,10 +3,10 @@ const sequelize = require('../db/db');
 
 const schema = {
     authId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
+    name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING, allowNull: false },
-    password: { type: DataTypes.STRING, allowNull: false },
-    isAdmin: { type: DataTypes.BOOLEAN, allowNull: false },
-    confirmed: { type: DataTypes.BOOLEAN, default: false }
+    password: { type: DataTypes.STRING },
+    isAdmin: { type: DataTypes.BOOLEAN, allowNull: false }
 };
 
 const options = {

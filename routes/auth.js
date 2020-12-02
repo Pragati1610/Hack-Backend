@@ -5,9 +5,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require("express-validator");
 const { Auth } = require('../models/relations');
-
-// mail validation
-// oAuth2 - firebase 
+const oAuthController = require('../controllers/oAuth');
 
 function validate(req, res) {
     const error = validationResult(req);
@@ -17,6 +15,15 @@ function validate(req, res) {
         });
     }
 }
+
+router.post('/oAuth', async(req, res) => {
+    const user = await oAuthController.createUser(req.body.idToken);
+    if (!user.isError) {
+        const token = jwt.sign(JSON.stringify(user.createdAuth), process.env.JWT_PASS);
+        user.token = token;
+    }
+    return res.status(user.isError ? 400 : 200).send(user);
+});
 
 router.post('/signup', [
     check("email").isEmail(),
@@ -48,10 +55,6 @@ router.post('/signup', [
 router.post('/login', async(req, res) => {
 
     const user = await auth.getAuthByEmail(req.body);
-
-    // if (!user.confirmed) {
-    //     return res.status(401).send({ message: "Email not verified" });
-    // }
 
     if (!user.isError) {
         const match = bcrypt.compareSync(req.body.password, user.password);

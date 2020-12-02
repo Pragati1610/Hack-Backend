@@ -56,12 +56,10 @@ class ParticipantTeamController {
     static async joinTeam(teamId, authId) {
         try {
             let team = await Team.findByPk(teamId, { raw: true });
-            console.log(team);
             let eventTeams = await Team.findAll({ where: { eventId: team.eventId }, raw: true });
             let e_t;
             let flag = 0;
             await Promise.all(eventTeams.map(async(team) => {
-                console.log(team)
                 e_t = await ParticipantTeam.findOne({
                     where: { TeamTeamId: team.teamId, AuthAuthId: authId },
                     raw: true
@@ -323,10 +321,7 @@ class ParticipantTeamController {
     static async updateTeam(team, authId) {
         try {
             const members = await ParticipantTeam.findAll({ where: { TeamTeamId: team.teamId, isWaiting: false }, attributes: ['AuthAuthId'], raw: true });
-            console.log(members[0].AuthAuthId);
-            console.log(authId);
             let member = await members.filter((mem) => mem.AuthAuthId === authId);
-            console.log(member);
             if (member.length === 0) {
                 return {
                     message: "This is not you team, you are not authorized to change these resources",
@@ -344,6 +339,24 @@ class ParticipantTeamController {
         }
     }
 
+    static async isInTeam(authId, eventId) {
+        let existingTeam = await Team.findOne({
+            where: {
+                eventId
+            },
+            include: [{
+                model: Auth,
+                where: {
+                    authId
+                }
+            }]
+        });
+        if (existingTeam) {
+            return { message: "Team already exists", existingTeam }
+        } else {
+            return { message: "You can proceed to the dashboard" }
+        }
+    }
 }
 
 module.exports = ParticipantTeamController;

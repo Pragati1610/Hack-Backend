@@ -1,4 +1,4 @@
-const { Team, Comments } = require('../models/relations');
+const { Comments } = require('../models/relations');
 const logger = require('../logging/logger');
 
 class CommentsController {
