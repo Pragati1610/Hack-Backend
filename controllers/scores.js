@@ -65,12 +65,10 @@ class ScoreController {
     static async updateTeamScore(scores) {
         try {
             const updateScore = await Scores.bulkCreate(scores, { updateOnDuplicate: ["score"], fields: ["scoreId", "score"] });
-            console.log(updateScore);
             let totalScore = 0;
             updateScore.forEach(score => {
                 totalScore += parseInt(score.score);
             });
-            console.log(updateScore);
             const finalScore = {
                 totalScore,
                 reviewId: updateScore[0].reviewId,

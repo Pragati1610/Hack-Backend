@@ -54,4 +54,9 @@ router.get('/:teamId', [jwtAuth, notAdmin], async(req, res) => {
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
+router.post('/isInTeam', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.isInTeam(req.user.authId, req.body.eventId);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
+
 module.exports = router;
