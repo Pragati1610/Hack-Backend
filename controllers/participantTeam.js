@@ -116,8 +116,34 @@ class ParticipantTeamController {
                     message: "You are not authorized to access these resources"
                 }
             } else {
-                let existingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false } });
-                let waitingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: true } });
+
+                let existingMembers = await ParticipantTeam.findAll({
+                    where: {
+                        TeamTeamId: teamId,
+                        isWaiting: false
+                    },
+                    raw: true
+                });
+                let waitingMembers = await ParticipantTeam.findAll({
+                    where: {
+                        TeamTeamId: teamId,
+                        isWaiting: true
+                    },
+                    include: [{ all: true }],
+                    raw: true
+                });
+                const existingMemberIds = existingMembers.map(member => member.AuthAuthId);
+                let auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
+                existingMembers = existingMembers.map(extmem => {
+                    extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
+                    return extmem;
+                });
+                const waitingMemberIds = waitingMembers.map(member => member.AuthAuthId);
+                auths = await Auth.findAll({ where: { authId: waitingMemberIds }, raw: true });
+                waitingMembers = waitingMembers.map(waitmem => {
+                    waitmem['auth'] = auths.filter(auth => auth.authId === waitmem.AuthAuthId);
+                    return waitmem;
+                });
 
                 return {
                     waitingMembers,
@@ -352,7 +378,11 @@ class ParticipantTeamController {
             }]
         });
         if (existingTeam) {
-            return { message: "Team already exists", existingTeam }
+            return {
+                message: "Team already exists",
+                existingTeam,
+                isError: true
+            }
         } else {
             return { message: "You can proceed to the dashboard" }
         }
