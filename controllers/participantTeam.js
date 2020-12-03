@@ -34,7 +34,17 @@ class ParticipantTeamController {
             if (!auth) {
                 return { message: "user doesn't exist" };
             }
-
+            let random = Math.random().toString(36).substring(2);
+            let flag = 1;
+            while (flag) {
+                const ifExisting = await Team.findOne({ where: { teamCode: random } });
+                if (ifExisting) {
+                    let random = Math.random().toString(36).substring(2);
+                } else {
+                    flag = 0;
+                }
+            }
+            team["teamCode"] = random;
             createdTeam = await Team.create(team);
             await createdTeam.addAuth(auth, { through: { isWaiting: false, isLeader: true } });
             await Team.update({ eventId }, { where: { teamId: createdTeam.teamId } });
@@ -53,9 +63,16 @@ class ParticipantTeamController {
     }
 
 
-    static async joinTeam(teamId, authId) {
+    static async joinTeam(teamCode, authId) {
         try {
-            let team = await Team.findByPk(teamId, { raw: true });
+
+            let team = await Team.findOne({ where: { teamCode: teamCode } });
+            if (!team) {
+                return {
+                    isError: true,
+                    message: "Team doesn't exist"
+                }
+            }
             let eventTeams = await Team.findAll({ where: { eventId: team.eventId }, raw: true });
             let e_t;
             let flag = 0;
@@ -70,19 +87,10 @@ class ParticipantTeamController {
                 return e_t;
             }));
             if (!flag) {
-                let team = await Team.findByPk(teamId);
-                if (team) {
-                    let auth = await Auth.findOne({ where: { authId } });
-                    await team.addAuth(auth, { through: { isWaiting: true, isLeader: false } });
-                    return {
-                        message: "Request to join the team has been made"
-                    }
-
-                } else {
-                    return {
-                        isError: true,
-                        message: "Team doesn't exist"
-                    }
+                let auth = await Auth.findOne({ where: { authId } });
+                await team.addAuth(auth, { through: { isWaiting: true, isLeader: false } });
+                return {
+                    message: "Request to join the team has been made"
                 }
             } else {
                 return {
@@ -366,6 +374,20 @@ class ParticipantTeamController {
     }
 
     static async isInTeam(authId, eventId) {
+        // let flag = 0;
+        // let teams = await Team.findAll({ where: { eventId } });
+        // let member, memberTeamId, leader;
+
+        // teams = await Promise.all(teams.map(async(team) => {
+        //     member = await ParticipantTeam.findOne({ TeamTeamId: team.teamId, AuthAuthId: authId });
+        //     if (member) {
+        //         flag = 1;
+        //         memberTeamId = team.teamId;
+        //     }
+        //     return team;
+        // }));
+
+
         let existingTeam = await Team.findOne({
             where: {
                 eventId
@@ -377,15 +399,26 @@ class ParticipantTeamController {
                 }
             }]
         });
+
         if (existingTeam) {
-            return {
-                message: "Team already exists",
-                existingTeam,
-                isError: true
-            }
+            return existingTeam.Auths[0];
         } else {
-            return { message: "You can proceed to the dashboard" }
+            return {
+                message: "You are not in a team"
+            }
         }
+
+        // if (flag) {
+        //     member = await ParticipantTeam.findOne({ TeamTeamId: memberTeamId, AuthAuthId: authId });
+        //     return {
+        //         message: "You are in a team",
+        //         leader: member.isLeader,
+        //         member
+        //     }
+
+        // } else {
+        //     return { message: "You are not in a team", isError: true }
+        // }
     }
 }
 

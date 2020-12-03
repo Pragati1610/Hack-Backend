@@ -22,7 +22,12 @@ router.post('/oAuth', async(req, res) => {
         const token = jwt.sign(JSON.stringify(user.createdAuth), process.env.JWT_PASS);
         user.token = token;
     }
-    return res.status(user.isError ? 400 : 200).send(user);
+    if (user.isLoggedIn) {
+        const token = jwt.sign(JSON.stringify(user.user), process.env.JWT_PASS);
+        user.token = token;
+        return res.status(200).send(user);
+    }
+    return res.status(user.isError ? 400 : 201).send(user);
 });
 
 router.post('/signup', [
