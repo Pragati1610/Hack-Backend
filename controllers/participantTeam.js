@@ -264,7 +264,8 @@ class ParticipantTeamController {
                     }
                 } else {
                     await ParticipantTeam.destroy({ where: { AuthAuthId: memberAuthId, TeamTeamId: teamId } });
-                    let members = await ParticipantTeam.findAll({ where: { AuthAuthId: memberAuthId, TeamTeamId: teamId, isWaiting: false }, raw: true });
+                    let members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
+                    console.log(members);
                     if (members.length === 0) {
                         await Team.destroy({ where: { teamId } });
                         return {
@@ -293,6 +294,7 @@ class ParticipantTeamController {
 
     static async leaveTeam(teamId, authId) {
         try {
+
             const members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
             let teamMemberCount;
             const leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isLeader: true } });
