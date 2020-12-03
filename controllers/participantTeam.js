@@ -301,8 +301,9 @@ class ParticipantTeamController {
                 await Team.destroy({ where: { teamId } });
                 teamMemberCount = "Team deleted because of absence of members or because leader left"
             } else {
-                teamMembersCount = `${members.length} members left in team`;
+                teamMemberCount = `${members.length} members left in team`;
             }
+            console.log(teamMemberCount);
             return {
                 message: "Successfully left team",
                 teamMemberCount
