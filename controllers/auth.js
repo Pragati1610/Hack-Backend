@@ -12,8 +12,7 @@ class AuthController {
                     status: 409
                 };
             }
-            const createdAuth = await Auth.create(auth);
-            createdAuth.password = Math.random().toString(36).substring(2);
+            const createdAuth = await Auth.create(auth, { attributes: { exclude: ['password'] } });
             return {
                 message: 'Auth created',
                 createdAuth,

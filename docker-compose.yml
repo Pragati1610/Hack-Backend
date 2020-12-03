@@ -29,6 +29,7 @@ services:
     env_file: .env
     networks:
       - internal
+      - web
     deploy:
       replicas: 1
       restart_policy:
