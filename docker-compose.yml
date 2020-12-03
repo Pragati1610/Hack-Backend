@@ -11,10 +11,10 @@ services:
       - 8080:8080
     restart: unless-stopped
     volumes:
-      - .
+      - .:/usr/app
     env_file: .env
     depends_on:
-      -db
+      - db
     networks:
       - internal
       - web
@@ -34,8 +34,11 @@ services:
       replicas: 1
       restart_policy:
         condition: any
-      volumes:
-        - ./dbdata:/var/lib/postgresql/data
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
 
 networks:
   web:
@@ -43,5 +46,3 @@ networks:
   internal:
     external: false  
     
-volumes:
-  static_volume:
