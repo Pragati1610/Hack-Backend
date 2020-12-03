@@ -250,7 +250,6 @@ class ParticipantTeamController {
         }
     }
 
-
     static async removeMember(memberAuthId, leaderAuthId, teamId) {
         try {
             let leader = await ParticipantTeam.findOne({ where: { AuthAuthId: leaderAuthId, TeamTeamId: teamId, isLeader: true }, raw: true });
@@ -294,7 +293,6 @@ class ParticipantTeamController {
 
     static async leaveTeam(teamId, authId) {
         try {
-
             const members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
             let teamMemberCount;
             const leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isLeader: true } });
