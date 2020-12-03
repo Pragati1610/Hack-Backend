@@ -12,7 +12,10 @@ class AuthController {
                     status: 409
                 };
             }
-            const createdAuth = await Auth.create(auth, { attributes: { exclude: ['password'] } });
+            const createdAuth = await Auth.create(auth, {
+                attributes: { exclude: ['password'] }
+            });
+            createdAuth.password = null;
             return {
                 message: 'Auth created',
                 createdAuth,
@@ -44,7 +47,6 @@ class AuthController {
     static async getAuthByEmail(auth) {
         try {
             const user = await Auth.findOne({ where: { email: auth.email, isAdmin: auth.isAdmin } });
-            user.password = Math.random().toString(36).substring(2);
             if (!user) {
                 return {
                     message: "User doesn't exist",

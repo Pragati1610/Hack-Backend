@@ -30,37 +30,35 @@ router.post('/oAuth', async(req, res) => {
     return res.status(user.isError ? 400 : 201).send(user);
 });
 
-router.post('/signup', [
-    check("email").isEmail(),
-    check("password").isLength({ min: 8, max: 32 }),
-    check("isAdmin").isBoolean()
-], async(req, res) => {
+// router.post('/signup', [
+//     check("email").isEmail(),
+//     check("password").isLength({ min: 8, max: 32 }),
+//     check("isAdmin").isBoolean()
+// ], async(req, res) => {
 
-    validate(req, res);
+//     validate(req, res);
 
-    // console.log(req.body.isAdmin)
-    // if (req.body.isAdmin === true) {
-    //     return res.status(406).send({ message: "User cannot be created" });
-    // }
+//     console.log(req.body.isAdmin)
+//     if (req.body.isAdmin === true) {
+//         return res.status(406).send({ message: "User cannot be created" });
+//     }
 
-    const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
-    req.body.password = bcrypt.hashSync(req.body.password, salt);
-    const response = await auth.createUser(req.body);
+//     const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
+//     req.body.password = bcrypt.hashSync(req.body.password, salt);
+//     const response = await auth.createUser(req.body);
 
-    if (!response.isError) {
-        const token = jwt.sign(JSON.stringify(response.createdAuth), process.env.JWT_PASS);
-        response.token = token;
-    }
-    return res.status(response.status).send(response);
-});
+//     if (!response.isError) {
+//         const token = jwt.sign(JSON.stringify(response.createdAuth), process.env.JWT_PASS);
+//         response.token = token;
+//     }
+//     return res.status(response.status).send(response);
+// });
 
 // remember me
 // jwt expire
 
 router.post('/login', async(req, res) => {
-
     const user = await auth.getAuthByEmail(req.body);
-
     if (!user.isError) {
         const match = bcrypt.compareSync(req.body.password, user.password);
         const token = jwt.sign(JSON.stringify(user), process.env.JWT_PASS);
@@ -71,12 +69,10 @@ router.post('/login', async(req, res) => {
     }
 });
 
-
-
-router.post('/findByAuthId', async(req, res) => {
-    const user = await Auth.findOne({ where: { authId: req.body.authId } });
-    return res.status(200).send(user);
-})
+// router.post('/findByAuthId', async(req, res) => {
+//     const user = await Auth.findOne({ where: { authId: req.body.authId } });
+//     return res.status(200).send(user);
+// })
 
 
 module.exports = router;
