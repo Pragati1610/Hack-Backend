@@ -10,7 +10,7 @@ router.post('/createTeam', [jwtAuth, notAdmin], async(req, res) => {
 });
 
 router.post('/joinTeam', [jwtAuth, notAdmin], async(req, res) => {
-    const response = await p_t.joinTeam(req.body.teamId, req.user.authId);
+    const response = await p_t.joinTeam(req.body.teamCode, req.user.authId);
     return res.status(response.isError ? 400 : 200).send(response);
 });
 

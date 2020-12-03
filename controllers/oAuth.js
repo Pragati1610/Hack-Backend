@@ -19,11 +19,14 @@ class OAuthController {
             const email = userInfo.email;
 
             const user = await Auth.findOne({ where: { email: email } });
+            console.log(user);
             if (user) {
                 return {
                     isError: true,
                     message: "This email already exists",
-                    status: 409
+                    status: 409,
+                    isLoggedIn: true,
+                    user
                 };
             }
             let random = Math.random().toString(36).substring(2);
