@@ -2,6 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const db = require('./db/db');
 const cors = require('cors');
+const rateLimit = require("express-rate-limit");
 
 require('./models/relations');
 
@@ -24,10 +25,20 @@ const app = express();
 // connection
 app.locals.db = db;
 
+app.set('trust proxy', 1);
+
+const limiter = rateLimit({
+    windowMs: process.env.RATE_LIMITTING_TIME, // 15 minutes
+    max: process.env.RATE_LIMITTING_MAX
+});
+
+//  apply to all requests
+
 // Middlewares
 app.use(express.json());
 app.use(compression());
 app.use(cors());
+app.use(limiter);
 
 // Logging
 app.use(morgan);
