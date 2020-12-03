@@ -1,4 +1,4 @@
-version "3.7"
+version: '3.7'
 
 services:
   backend:
@@ -43,3 +43,5 @@ networks:
   internal:
     external: false  
     
+volumes:
+  static_volume:
