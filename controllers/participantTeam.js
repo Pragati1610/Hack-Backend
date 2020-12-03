@@ -183,7 +183,19 @@ class ParticipantTeamController {
                     message: "You are not authorized to access these resources"
                 }
             } else {
-                let existingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false } });
+                let existingMembers = await ParticipantTeam.findAll({
+                    where: {
+                        TeamTeamId: teamId,
+                        isWaiting: false
+                    },
+                    raw: true
+                });
+                const existingMemberIds = existingMembers.map(member => member.AuthAuthId);
+                let auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
+                existingMembers = existingMembers.map(extmem => {
+                    extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
+                    return extmem;
+                });
 
                 return {
                     existingMembers
@@ -374,19 +386,6 @@ class ParticipantTeamController {
     }
 
     static async isInTeam(authId, eventId) {
-        // let flag = 0;
-        // let teams = await Team.findAll({ where: { eventId } });
-        // let member, memberTeamId, leader;
-
-        // teams = await Promise.all(teams.map(async(team) => {
-        //     member = await ParticipantTeam.findOne({ TeamTeamId: team.teamId, AuthAuthId: authId });
-        //     if (member) {
-        //         flag = 1;
-        //         memberTeamId = team.teamId;
-        //     }
-        //     return team;
-        // }));
-
 
         let existingTeam = await Team.findOne({
             where: {
@@ -408,17 +407,6 @@ class ParticipantTeamController {
             }
         }
 
-        // if (flag) {
-        //     member = await ParticipantTeam.findOne({ TeamTeamId: memberTeamId, AuthAuthId: authId });
-        //     return {
-        //         message: "You are in a team",
-        //         leader: member.isLeader,
-        //         member
-        //     }
-
-        // } else {
-        //     return { message: "You are not in a team", isError: true }
-        // }
     }
 }
 
