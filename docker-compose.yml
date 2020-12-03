@@ -36,22 +36,6 @@ services:
       volumes:
         - ./dbdata:/var/lib/postgresql/data
 
-  webserver:
-      image: nginx:mainline-alpine
-      container_name: webserver
-      restart: unless-stopped
-      ports:
-        - "80:80"
-      volumes:
-        - web-root:/var/www/html
-        - ./nginx-conf:/etc/nginx/conf.d
-        - certbot-etc:/etc/letsencrypt
-        - certbot-var:/var/lib/letsencrypt
-      depends_on:
-        - nodejs
-      networks:
-        - app-network
-          
 networks:
   web:
     external: true
