@@ -73,6 +73,7 @@ class ParticipantTeamController {
                     message: "Team doesn't exist"
                 }
             }
+            console.log(team);
             let eventTeams = await Team.findAll({ where: { eventId: team.eventId }, raw: true });
             let e_t;
             let flag = 0;
@@ -387,7 +388,6 @@ class ParticipantTeamController {
     }
 
     static async isInTeam(authId, eventId) {
-
         let existingTeam = await Team.findOne({
             where: {
                 eventId
