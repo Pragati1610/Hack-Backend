@@ -1,4 +1,4 @@
-const { Auth } = require('../models/relations');
+const { Auth, Team, ParticipantTeam } = require('../models/relations');
 const logger = require('../logging/logger');
 
 class AuthController {
@@ -81,6 +81,26 @@ class AuthController {
             await Auth.destroy({ where: { authId: authId } });
             return { message: 'deleted Auth' };
         } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString()
+            };
+        }
+    }
+
+    static async getAuths(eventId) {
+        try {
+            let teams = await Team.findAll({ where: { eventId } });
+            teams = teams.map(team => team.teamId);
+            let participantsInTeams = await ParticipantTeam.findAll({ where: { teamId: teams } });
+            participantsInTeams = participantsInTeams.map(participant => participant.AuthAuthId);
+            let auths = await Auth.findAll({ where: { authId: participantsInTeams } });
+            return {
+                auths,
+                count: auths.length
+            }
+        } catch (err) {
             logger.error(e);
             return {
                 isError: true,

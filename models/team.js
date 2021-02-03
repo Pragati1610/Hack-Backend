@@ -7,7 +7,8 @@ const schema = {
     teamCode: { type: DataTypes.STRING },
     teamName: { type: DataTypes.STRING, allowNull: false },
     abstract: { type: DataTypes.TEXT },
-    link: { type: DataTypes.STRING } // title for ideathon
+    link: { type: DataTypes.STRING }, // title for ideathon,
+    problemStatement: { type: DataTypes.STRING }
 };
 
 const options = {

@@ -18,7 +18,8 @@ const scores = require('./routes/scores');
 const review = require('./routes/review');
 const p_t = require('./routes/participantTeam');
 const comments = require('./routes/comments');
-// const testMail = require('./routes/testMail');
+const convertToFile = require('./routes/convertToFile');
+// const sendMailsToQualified = require('./routes/sendMailsToQualified');
 
 const app = express();
 
@@ -43,6 +44,11 @@ app.use(limiter);
 // Logging
 app.use(morgan);
 
+app.get('/', (req, res) => {
+    const timestamp = Math.floor(Date.now() / 1000);
+    res.send({ message: "Version 1.6", timestamp });
+});
+
 // Mount routes
 app.use('/auth', auth);
 app.use('/event', event);
@@ -51,6 +57,7 @@ app.use('/team', team);
 app.use('/scores', scores);
 app.use('/review', review);
 app.use('/comments', comments);
-// app.use('/mail', testMail);
+app.use('/convertToFile', convertToFile);
+// app.use('/sendMailsToQualified', sendMailsToQualified);
 
 module.exports = app;

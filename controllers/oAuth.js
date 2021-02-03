@@ -19,8 +19,9 @@ class OAuthController {
             const email = userInfo.email;
 
             const user = await Auth.findOne({ where: { email: email } });
-            console.log(user);
+
             if (user) {
+                user.password = null;
                 return {
                     isError: true,
                     message: "This email already exists",
@@ -33,17 +34,19 @@ class OAuthController {
             const auth = {
                 email,
                 name,
-                password: random,
-                isAdmin: false
+                "password": random,
+                "isAdmin": false
             }
+            console.log(auth);
             const createdAuth = await Auth.create(auth);
+            console.log(createdAuth);
+            createdAuth.password = null;
             return {
                 message: 'Auth created',
                 userInfo,
                 createdAuth,
                 status: 200
             };
-
         } catch (e) {
             logger.error(e);
             return {
