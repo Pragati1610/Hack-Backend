@@ -1,12 +1,49 @@
-const { Team, Review, OverAllScore, ParticipantTeam, Comments } = require('../models/relations');
+const { Team, Review, OverAllScore, ParticipantTeam, Comments, Auth } = require('../models/relations');
 const logger = require('../logging/logger');
 
 class TeamController {
-
     static async getAllTeams(eventId) {
         try {
-            const teams = await Team.findAll({ where: { eventId: eventId } });
-            return teams;
+            let teams = await Team.findAll({ where: { eventId: eventId }, raw: true });
+            let existingMembers, existingMemberIds;
+            let waitingMembers, waitingMemberIds;
+            let auths;
+            teams = await Promise.all(teams.map(async(team) => {
+                existingMembers = await ParticipantTeam.findAll({
+                    where: {
+                        TeamTeamId: team.teamId,
+                        isWaiting: false
+                    },
+                    raw: true
+                });
+                waitingMembers = await ParticipantTeam.findAll({
+                    where: {
+                        TeamTeamId: team.teamId,
+                        isWaiting: true
+                    },
+                    include: [{ all: true }],
+                    raw: true
+                });
+                existingMemberIds = existingMembers.map(member => member.AuthAuthId);
+                auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
+                existingMembers = existingMembers.map(extmem => {
+                    extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
+                    extmem.auth[0].password = null;
+                    return extmem;
+                });
+                waitingMemberIds = waitingMembers.map(member => member.AuthAuthId);
+                auths = await Auth.findAll({ where: { authId: waitingMemberIds }, raw: true });
+                waitingMembers = waitingMembers.map(waitmem => {
+                    waitmem['auth'] = auths.filter(auth => auth.authId === waitmem.AuthAuthId);
+                    waitmem.auth[0].password = null;
+                    return waitmem;
+                });
+                team["existingMembers"] = existingMembers;
+                team["waitingMembers"] = waitingMembers;
+                return team;
+            }));
+            // console.log(teams);
+            return { teams: teams, count: teams.length };
         } catch (e) {
             logger.error(e);
             return {

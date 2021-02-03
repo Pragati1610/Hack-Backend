@@ -1,5 +1,7 @@
 const { Auth, Team, Events, ParticipantTeam } = require('../models/relations');
 const logger = require('../logging/logger');
+const sendRemoveTeamMemberMail = require('../routes/templates/removedTeamMember');
+const mail = require('../routes/mail');
 
 class ParticipantTeamController {
     static async createTeam(team, authId, eventId) {
@@ -62,10 +64,8 @@ class ParticipantTeamController {
         }
     }
 
-
     static async joinTeam(teamCode, authId) {
         try {
-
             let team = await Team.findOne({ where: { teamCode: teamCode } });
             if (!team) {
                 return {
@@ -73,7 +73,6 @@ class ParticipantTeamController {
                     message: "Team doesn't exist"
                 }
             }
-            console.log(team);
             let eventTeams = await Team.findAll({ where: { eventId: team.eventId }, raw: true });
             let e_t;
             let flag = 0;
@@ -88,10 +87,33 @@ class ParticipantTeamController {
                 return e_t;
             }));
             if (!flag) {
+
+                const members = await ParticipantTeam.findAll({ where: { TeamTeamId: team.teamId, isWaiting: false }, raw: true });
+                const event = await Events.findOne({ where: { eventId: team.eventId } });
+                console.log(members, event, members.length, event.maxTeamSize);
+                if (members.length === event.maxTeamSize) {
+                    return {
+                        message: "Sorry the Team is full",
+                        isError: true
+                    }
+                }
+
                 let auth = await Auth.findOne({ where: { authId } });
                 await team.addAuth(auth, { through: { isWaiting: true, isLeader: false } });
+
+                const leader = await ParticipantTeam.findOne({ where: { TeamTeamId: team.teamId, isLeader: true } });
+                const teamLeader = await Auth.findOne({
+                    where: {
+                        authId: leader.AuthAuthId
+                    }
+                });
+
+                let joinedMember = await Auth.findOne({ where: { authId }, raw: true });
+                joinedMember.password = null;
                 return {
-                    message: "Request to join the team has been made"
+                    message: "Request to join the team has been made",
+                    teamLeader,
+                    joinedMember
                 }
             } else {
                 return {
@@ -145,12 +167,16 @@ class ParticipantTeamController {
                 let auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
                 existingMembers = existingMembers.map(extmem => {
                     extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
+                    extmem.password = null;
+                    extmem.auth[0].password = null;
                     return extmem;
                 });
                 const waitingMemberIds = waitingMembers.map(member => member.AuthAuthId);
                 auths = await Auth.findAll({ where: { authId: waitingMemberIds }, raw: true });
                 waitingMembers = waitingMembers.map(waitmem => {
                     waitmem['auth'] = auths.filter(auth => auth.authId === waitmem.AuthAuthId);
+                    waitmem.password = null;
+                    waitmem.auth[0].password = null;
                     return waitmem;
                 });
 
@@ -195,6 +221,8 @@ class ParticipantTeamController {
                 let auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
                 existingMembers = existingMembers.map(extmem => {
                     extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
+                    extmem.password = null;
+                    extmem.auth[0].password = null;
                     return extmem;
                 });
 
@@ -233,8 +261,34 @@ class ParticipantTeamController {
                 }
 
                 await ParticipantTeam.update({ isWaiting: false }, { where: { AuthAuthId: waitingMemberAuthId, TeamTeamId: teamId } });
+
+                let addedMember = await Auth.findOne({ where: { authId: searchMember.AuthAuthId } });
+                let leaderAuth = await Auth.findOne({ where: { authId: leader.AuthAuthId } });
+
+
+                if ((members.length + 1) === event.maxTeamSize) {
+                    let waitingMembers = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: true } });
+                    waitingMembers.forEach(async(member) => {
+                        let memberAuth = await Auth.findOne({ where: { authId: member.AuthAuthId } });
+                        this.removeMember(member.AuthAuthId, leaderAuthId, teamId);
+                        let emails = [memberAuth.email];
+                        let details = { name: team.teamName };
+                        let htmlPart = {
+                            Charset: "UTF-8",
+                            Data: sendRemoveTeamMemberMail(details)
+                        };
+                        let subject = {
+                            Charset: 'UTF-8',
+                            Data: `Ideathon DSC VIT: Oops! Team is Full`
+                        }
+                        mail(emails, htmlPart, subject);
+                    });
+                }
+
                 return {
-                    message: "Successfully made team member"
+                    message: "Successfully made team member",
+                    addedMember,
+                    leaderAuth
                 }
             } else {
                 return {
@@ -294,15 +348,18 @@ class ParticipantTeamController {
 
     static async leaveTeam(teamId, authId) {
         try {
-            const members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
+            let members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
             let teamMemberCount;
             const leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isLeader: true } });
             await ParticipantTeam.destroy({ where: { AuthAuthId: authId, TeamTeamId: teamId } });
+            members = await ParticipantTeam.findAll({ where: { TeamTeamId: teamId, isWaiting: false }, raw: true });
             if (members.length === 0 || leader) {
                 await Team.destroy({ where: { teamId } });
                 teamMemberCount = "Team deleted because of absence of members or because leader left"
             } else {
-                teamMemberCount = `${members.length} members left in team`;
+                teamMemberCount = `
+                                            $ { members.length }
+                                            members left in team `;
             }
             console.log(teamMemberCount);
             return {
@@ -399,9 +456,14 @@ class ParticipantTeamController {
                 }
             }]
         });
-
         if (existingTeam) {
-            return existingTeam.Auths[0];
+            existingTeam.Auths[0].password = null;
+            existingTeam.password = null;
+            let teamId = (existingTeam.Auths[0].ParticipantTeam.TeamTeamId);
+            console.log(teamId);
+            const team = await Team.findOne({ where: { teamId } });
+            team.teamCode = null;
+            return { existingTeam: existingTeam.Auths[0], team };
         } else {
             return {
                 message: "You are not in a team"

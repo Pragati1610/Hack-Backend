@@ -29,4 +29,9 @@ router.delete('/deleteEvent', [jwtAuth, adminAuth], async(req, res) => {
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
+router.post('/getStats', [jwtAuth, adminAuth], async(req, res) => {
+    const response = await events.getStats(req.body.eventId);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
+
 module.exports = router;

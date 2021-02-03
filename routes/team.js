@@ -4,6 +4,7 @@ const router = express.Router();
 const jwtAuth = require('../middlewares/jwtAuthMiddleware');
 const notAdmin = require('../middlewares/notAdminAuthMiddleware');
 const adminAuth = require('../middlewares/adminAuthMiddleware');
+const { Auth, ParticipantTeam } = require('../models/relations');
 
 router.get('/allTeams/:eventId', [jwtAuth, adminAuth], async(req, res) => {
     const response = await team.getAllTeams(req.params.eventId);

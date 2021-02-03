@@ -1,4 +1,4 @@
-const { Events, Metrics, Team, Review } = require('../models/relations');
+const { Events, Metrics, Team, Review, ParticipantTeam, Auth } = require('../models/relations');
 const logger = require('../logging/logger');
 const { QueryTypes, Sequelize } = require('sequelize');
 
@@ -109,6 +109,60 @@ class EventsController {
                 message: e.toString()
             };
         }
+    }
+
+    static async getStats(eventId) {
+        try {
+            let teams = await Team.findAll({ where: { eventId }, raw: true });
+            let teamIds = teams.map((team) => team.teamId);
+
+            let participantsInTeams = await ParticipantTeam.findAll({ where: { TeamTeamId: teamIds }, raw: true });
+            let authId;
+            participantsInTeams = await Promise.all(participantsInTeams.map(async(participant) => {
+                authId = participant.AuthAuthId;
+                participant["auth"] = await Auth.findOne({ where: { authId } });
+                participant["auth"].password = null;
+                return participant;
+            }));
+
+            let auths = await Auth.findAll();
+
+            teams = teams.map((team) => {
+
+                let leader = participantsInTeams.filter((participant) => {
+                    return (participant.TeamTeamId === team.teamId) && (participant.isLeader === true)
+                });
+                team["leader"] = (leader);
+                team["leaderEmail"] = leader[0].auth["email"];
+                team["leaderName"] = leader[0].auth["name"];
+
+                let existingTeamMembers = participantsInTeams.filter((participant) => {
+                    return (participant.TeamTeamId === team.teamId) && (participant.isWaiting === false)
+                });
+                let waitingTeamMembers = participantsInTeams.filter((participant) => {
+                    return (participant.TeamTeamId === team.teamId) && (participant.isWaiting === true)
+                });
+                team["existingTeamMembers"] = existingTeamMembers;
+                team["waitingTeamMembers"] = waitingTeamMembers;
+
+                return team;
+            });
+
+            return {
+                numberOfTeams: teams.length,
+                numberOfParticipantsInTeams: participantsInTeams.length,
+                numberOfParticipantsRegistered: auths.length,
+                teams
+            }
+        } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString()
+            };
+        }
+
+
     }
 }
 

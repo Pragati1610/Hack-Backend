@@ -4,8 +4,12 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require("express-validator");
-const { Auth } = require('../models/relations');
+const { Auth, ParticipantTeam } = require('../models/relations');
 const oAuthController = require('../controllers/oAuth');
+const notAdmin = require('../middlewares/notAdminAuthMiddleware');
+const adminAuth = require('../middlewares/adminAuthMiddleware');
+const jwtAuth = require('../middlewares/jwtAuthMiddleware');
+
 
 function validate(req, res) {
     const error = validationResult(req);
@@ -69,10 +73,14 @@ router.post('/login', async(req, res) => {
     }
 });
 
-// router.post('/findByAuthId', async(req, res) => {
-//     const user = await Auth.findOne({ where: { authId: req.body.authId } });
+// router.get('/findAuth', [notAdmin], async(req, res) => {
+//     const user = await Auth.findOne({ where: { authId: req.user.authId } });
 //     return res.status(200).send(user);
 // })
 
+router.get('/allAuths', async(req, res) => {
+    const response = await Auth.findAll();
+    return res.status(200).send(response);
+});
 
 module.exports = router;
