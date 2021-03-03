@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
+// console.log(sequelize)
 
 const schema = {
     authId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
@@ -14,7 +15,6 @@ const schema = {
 const options = {
     timestamps: false
 };
-
 const auth = sequelize.define('Auth', schema, options);
 
 module.exports = auth;

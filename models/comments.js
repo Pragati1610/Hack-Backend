@@ -4,12 +4,12 @@ const Review = require('./review');
 const Team = require('./team');
 
 const schema = {
-  commentId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
-  commentBody: { type: DataTypes.STRING, allowNull: false }
+    commentId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
+    commentBody: { type: DataTypes.STRING, allowNull: false }
 };
 
 const options = {
-  timestamps: false
+    timestamps: false
 };
 
 const Comments = sequelize.define('Comments', schema, options);
