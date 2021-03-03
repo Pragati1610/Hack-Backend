@@ -1,6 +1,6 @@
 const { Auth, Team, Events, ParticipantTeam } = require('../models/relations');
 const logger = require('../logging/logger');
-const sendRemoveTeamMemberMail = require('../routes/templates/removedTeamMember');
+// const sendRemoveTeamMemberMail = require('../routes/templates/removedTeamMember');
 const mail = require('../routes/mail');
 
 class ParticipantTeamController {
