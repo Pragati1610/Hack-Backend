@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "dsc-ideathon",
+  "private_key_id": "c0f60f88b0af76808a2ab8e7a8e2356421ea533b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDFQsejLv/NmhT5\nWP+XTDazKqQXh//Ip+uRuM+mJwwNcPDHIPCs+1On3AJuk8U8yxB6zoOsaUehJins\nj/BHNh7+Wry27ztUWk+1SM4IrG+8EYXC+OJuO2+zHF6UuPKAm8h/Cz6durykLQk5\nngzMQCySP6KMz6WZxiChfD8kwox1oCJQ6zq4xTbEai86XRzskvw2zPTZ/EmDex0y\nmsLvFVkwxdcxKvbAV7HO5gi+JFi0EByBE7KEQ1qf+jXeWuTEmg9OXAwEJhDu8DCT\nZCshBbfJodNAi/QSeepW6+KW3kaHWLxpdFGU00TQNyUO+RDYBvFf3nyhI8MxjrRc\n1ebwK1hjAgMBAAECggEAYZOzklak5ezytBdgs1RZeI4+xn8ZOYZLAnXzjaKiFSIJ\nkM8MDt1x18Z+k3lYZ0ahu8XdH5OigaYRtfnLp0Yv1a1HzYwQgpz78dZ2SJcX3GWk\nj7oys8mF6wk9Bf9owdKNvr5utnJRbzrx5cT3Wq/h/GQrAdGTfrohmRAPYh00gtgZ\ndq4/vsrlUzD/MPyuTjVTnNXNjKaCDrXXIYT7GteL7O/0tRWiXn51zkRzYV0rB9CW\nF/0a2xskSDBVcZO2M6xEsT4kIysBnp0//ya60PLxxMiQZWsMkHNmrrPTOWKVDNnb\nYJWchJM0O5TzQw2vzHKK40p2RMZlQTMLDOR4TiaG8QKBgQDuvWX4QwNfPJe/Px4t\nlQMWv+HlArmzPP9IilIzmZ1rozpl6aMbB1m51B7wBX+pxDU4AzztSc4cwLQcl7KZ\nF0RfudGG59WCiZxWQlfq3N1gGymRnHsyCylQ3yQ9F7VC4hJqSxLpE+Hphi+jF+5V\nYoxqtAsXdWqAGFWF6Hj54Q9+sQKBgQDThbAQfDg0e3MCp8RAxyRMBqKlV4/LrNqN\nnJNeWRF0N0Ub8nPfPllwImbGbE0jGxWyPHfhchUgqNlC1U575DaW8T77F9gP0HWi\nVWKkN7bYWFNglZdYjVCNEbf0zUe0k4MBW/ylKzbVYNFdcU+wCQSyRTR+LIUbokbO\nJ4wklnzVUwKBgQCpPBdholdslm5Xgq2o0D3NTZ4bEhCDb1TjnjHhJB7EY4QNJE6b\n5V0EbsqziKJTvKOhHiJ9btkt5qiGsD5JaYXtebJ+uC7RBy2MtCDQe1puOzL/Znaq\nJeFW06dDq1+xlsJJGQjBsndta9KvAVLQsjgpl5FZQsGJJjbR4taHA7RRMQKBgE3v\nXQ7F5iOYNKkOzWWcukf0zeqj14yQ9Lnmrfm+UYsDbkg8zeq8W1HQqxODBezgZt8U\nHouHcDdnXx2b4F4PmPmGi9ESWP6CrUURttWQ3aLa8GWO2IO9FafUlnXxSPFExKk0\njmMBCCQYlyuZu2W9/Of+TbgLiUPER9hfg+hbNkWXAoGABfMZk/wophDytkX4HQP2\nsIEZajFiWmnI6FLM5u6x60riEbRFYtcHRoIGJS0o88IkNkctL9JArYh+uM6kdBYP\nBnnMpXDarjs4CJjITPkU+iF2au3KZvxMXmT+Ukd5RytllIO+k9QLwv7yGZmDwiSM\njt/8Djp2DbR9GB4V9VSVCJw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-gwe6w@dsc-ideathon.iam.gserviceaccount.com",
+  "client_id": "107712304161256989994",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gwe6w%40dsc-ideathon.iam.gserviceaccount.com"
+}

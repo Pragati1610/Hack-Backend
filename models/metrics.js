@@ -3,13 +3,13 @@ const sequelize = require('../db/db');
 const Events = require('./events');
 
 const schema = {
-  metricId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
-  metricName: { type: DataTypes.STRING, allowNull: false },
-  maxScore: { type: DataTypes.INTEGER, allowNull: false }
+    metricId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
+    metricName: { type: DataTypes.STRING, allowNull: false },
+    maxScore: { type: DataTypes.INTEGER, allowNull: false }
 };
 
 const options = {
-  timestamps: false
+    timestamps: false
 };
 
 const Metrics = sequelize.define('Metrics', schema, options);

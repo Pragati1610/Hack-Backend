@@ -111,7 +111,7 @@ dist
 certs/
 sendgrid.env
 
-firebase.json
+
 
 public
 

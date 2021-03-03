@@ -1,6 +1,6 @@
 const express = require('express');
 const compression = require('compression');
-const db = require('./db/db');
+const db = require('./db/db').default;
 const cors = require('cors');
 const rateLimit = require("express-rate-limit");
 
