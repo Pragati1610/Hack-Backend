@@ -29,6 +29,19 @@ class CommentsController {
             };
         }
     }
+    static async getColorCode(data) {
+        try {
+            // data.teamId, data.reviewId
+            const comment = await Comments.findOne({ where: { colorCode: data.colorCode, reviewId: data.reviewId } });
+            return comment;
+        } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString()
+            };
+        }
+    }
 }
 
 module.exports = CommentsController;

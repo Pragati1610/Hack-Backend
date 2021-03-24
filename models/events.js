@@ -6,6 +6,7 @@ const schema = {
     eventName: { type: DataTypes.STRING, allowNull: false },
     problemStatements: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
     dateOfEvent: { type: DataTypes.DATE, allowNull: false },
+    endOfEvent: { type: DataTypes.DATE, allowNull: false },
     maxTeamSize: { type: DataTypes.INTEGER, allowNull: false }
 };
 

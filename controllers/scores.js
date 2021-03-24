@@ -23,7 +23,8 @@ class ScoreController {
             let comments = {
                 "reviewId": review.reviewId,
                 "teamId": data.teamId,
-                "commentBody": data.commentBody
+                "commentBody": data.commentBody,
+                "colorCode": data.colorCode
             };
 
             const createdScore = await Scores.bulkCreate(scores);
