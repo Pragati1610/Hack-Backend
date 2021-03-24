@@ -78,10 +78,10 @@ router.delete('/deleteTeam', [jwtAuth, notAdmin], async(req, res) => {
     return res.status(response.isError ? 400 : 200).send(response.message);
 });
 
-// router.patch('/updateTeam', [jwtAuth, notAdmin], async(req, res) => {
-//     const response = await p_t.updateTeam(req.body, req.user.authId);
-//     return res.status(response.isError ? 400 : 200).send(response);
-// });
+router.patch('/updateTeam', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.updateTeam(req.body, req.user.authId);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
 
 router.get('/:teamId', [jwtAuth, notAdmin], async(req, res) => {
     const response = await p_t.getTeam(req.params.teamId, req.user.authId);

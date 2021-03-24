@@ -14,4 +14,9 @@ router.get('/getComment/:teamId/:reviewId', [jwtAuth, adminAuth], async(req, res
     return res.status(response.isError ? 400 : 200).send(response);
 });
 
+router.get('/getColorCode/:reviewId/:colorCode', [jwtAuth, adminAuth], async(req, res) => {
+    const response = await comments.getColorCode(req.params);
+    return res.status(response.isError ? 400 : 200).send(response);
+});
+
 module.exports = router;

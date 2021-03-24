@@ -5,7 +5,8 @@ const Team = require('./team');
 
 const schema = {
     commentId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
-    commentBody: { type: DataTypes.STRING, allowNull: false }
+    commentBody: { type: DataTypes.STRING, allowNull: false },
+    colorCode: { type: DataTypes.INTEGER, allowNull: false }
 };
 
 const options = {
