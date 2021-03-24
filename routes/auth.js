@@ -10,7 +10,6 @@ const notAdmin = require('../middlewares/notAdminAuthMiddleware');
 const adminAuth = require('../middlewares/adminAuthMiddleware');
 const jwtAuth = require('../middlewares/jwtAuthMiddleware');
 
-
 function validate(req, res) {
     const error = validationResult(req);
     if (!error.isEmpty()) {
@@ -34,29 +33,29 @@ router.post('/oAuth', async(req, res) => {
     return res.status(user.isError ? 400 : 201).send(user);
 });
 
-// router.post('/signup', [
-//     check("email").isEmail(),
-//     check("password").isLength({ min: 8, max: 32 }),
-//     check("isAdmin").isBoolean()
-// ], async(req, res) => {
+router.post('/signup', [
+    check("email").isEmail(),
+    check("password").isLength({ min: 8, max: 32 }),
+    check("isAdmin").isBoolean()
+], async(req, res) => {
 
-//     validate(req, res);
+    validate(req, res);
 
-//     console.log(req.body.isAdmin)
-//     if (req.body.isAdmin === true) {
-//         return res.status(406).send({ message: "User cannot be created" });
-//     }
+    console.log(req.body.isAdmin)
+    if (req.body.isAdmin === true) {
+        return res.status(406).send({ message: "User cannot be created" });
+    }
 
-//     const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
-//     req.body.password = bcrypt.hashSync(req.body.password, salt);
-//     const response = await auth.createUser(req.body);
+    const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
+    req.body.password = bcrypt.hashSync(req.body.password, salt);
+    const response = await auth.createUser(req.body);
 
-//     if (!response.isError) {
-//         const token = jwt.sign(JSON.stringify(response.createdAuth), process.env.JWT_PASS);
-//         response.token = token;
-//     }
-//     return res.status(response.status).send(response);
-// });
+    if (!response.isError) {
+        const token = jwt.sign(JSON.stringify(response.createdAuth), process.env.JWT_PASS);
+        response.token = token;
+    }
+    return res.status(response.status).send(response);
+});
 
 // remember me
 // jwt expire
@@ -69,7 +68,7 @@ router.post('/login', async(req, res) => {
         return res.status(match ? 200 : 400).send({ user, token });
     } else {
         console.log(user)
-        return res.status(401).send({ message: "User not authorized" })
+        return res.status(401).send({ message: "User not authorized", m: user.message })
     }
 });
 

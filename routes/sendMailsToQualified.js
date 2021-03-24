@@ -4,6 +4,9 @@ const sendClearedRoundMail = require('./templates/sendClearedRoundMail');
 const mail = require('../routes/mail');
 const disqualified = require('./templates/disqualified');
 const wt = require('./templates/wt2020');
+const cert = require('./templates/ideathonCert');
+const club = require('./templates/clubs');
+const reminder = require('./templates/reminder');
 
 xlsxFile('./data.xlsx').then((rows) => {
 
@@ -12,13 +15,14 @@ xlsxFile('./data.xlsx').then((rows) => {
         let details = { name: rows[i + 1][0] };
         let htmlPart = {
             Charset: "UTF-8",
-            Data: wt(details)
+            Data: reminder(details)
         };
         let subject = {
             Charset: 'UTF-8',
-            Data: `WomenTechies is Back !!`
+            Data: `
+            `
         }
         mail(emails, htmlPart, subject);
-        console.log(details);
+        // console.log(details);
     }
 })

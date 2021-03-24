@@ -90,7 +90,6 @@ class ParticipantTeamController {
 
                 const members = await ParticipantTeam.findAll({ where: { TeamTeamId: team.teamId, isWaiting: false }, raw: true });
                 const event = await Events.findOne({ where: { eventId: team.eventId } });
-                console.log(members, event, members.length, event.maxTeamSize);
                 if (members.length === event.maxTeamSize) {
                     return {
                         message: "Sorry the Team is full",
@@ -109,7 +108,7 @@ class ParticipantTeamController {
                 });
 
                 let joinedMember = await Auth.findOne({ where: { authId }, raw: true });
-                joinedMember.password = null;
+                // joinedMember.password = null;
                 return {
                     message: "Request to join the team has been made",
                     teamLeader,

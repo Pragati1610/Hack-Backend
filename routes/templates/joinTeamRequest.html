@@ -1,9 +1,7 @@
-const sendRemoveTeamMemberMail = function(details) {
-
-    return `<!DOCTYPE html
+<!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
- 
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Ideathon 2020</title>
@@ -14,13 +12,12 @@ const sendRemoveTeamMemberMail = function(details) {
         }
     </style>
 </head>
- 
+
 <body style="margin: 0; padding: 0; background-color: #3635C1; color: #ffffff">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td style="padding: 10px 0 30px 0">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"
-                    style="border-collapse: collapse">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse">
                     <tr>
                         <td align="center" bgcolor="#70bbd9" style="
                                     color: #ffffff;
@@ -28,10 +25,9 @@ const sendRemoveTeamMemberMail = function(details) {
                                     font-weight: bold;
                                     font-family: Roboto, sans-serif;
                                 ">
-                                <a href="https://ideathon.dscvit.com">
-                                <img src="https://i.ibb.co/4FLj3Db/banner-1.png" alt="Ideathon 2020" width="100%"
-                                height="130" style="display: block" />
-                                </a>
+                            <a href="https://ideathon.dscvit.com">
+                                <img src="https://i.ibb.co/4FLj3Db/banner-1.png" alt="Ideathon 2020" width="100%" height="130" style="display: block" />
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -46,7 +42,7 @@ const sendRemoveTeamMemberMail = function(details) {
                                                 text-decoration: underline;
                                                 text-decoration-color: #fea1be;
                                             ">
-                                        <b>Oops! Team is Full</b>
+                                        <b>Team join request</b>
                                     </td>
                                 </tr>
                                 <tr>
@@ -62,14 +58,15 @@ const sendRemoveTeamMemberMail = function(details) {
                                                                         font-size: 15px;
                                                                         line-height: 20px;
                                                                     ">
-                                                                    <p style="color: #ffffff">Hi there!
-                                                                <br>
-                                                                Team ${details.name} is now full. Hence you have been removed from the waiting list. We suggest you to join another team or create a new team on your own through our portal by clicking the link below. </p>
-                                                                    <a href="https://portal.ideathon.dscvit.com/login" style="background-color: #ffffff">portal.ideathon.dscvit.com/login</a>
+                                                                <p style="color: #ffffff">Hi there!
+                                                                    <br> ${details.name} wants to join your team to participate in DSC VIT’s Ideathon 2020. You may choose to accept or reject this request through our portal by clicking the link below.
+                                                                </p>
+                                                                <a href="https://portal.ideathon.dscvit.com/login" style="background-color: #ffffff">portal.ideathon.dscvit.com/login</a>
                                                                 <br>
                                                                 <p style="color: #ffffff">
-                                                                    We look forward to seeing your submission on our platform.
+                                                                    We look forward to seeing your submission after successful team formation.
                                                                 </p>
+                                                                <br>
                                                                 <p style="color: #ffffff">Cheers!</p>
                                                                 <p style="color: #ffffff">Team DSC VIT</p>
                                                             </td>
@@ -81,9 +78,7 @@ const sendRemoveTeamMemberMail = function(details) {
                                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                         <tr>
                                                             <td>
-                                                                <img src="https://i.ibb.co/xCS30v8/Ideathon-Board.png"
-                                                                    alt="" width="80%" height="auto"
-                                                                    style="display: block;" />
+                                                                <img src="https://i.ibb.co/xCS30v8/Ideathon-Board.png" alt="" width="80%" height="auto" style="display: block;" />
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -95,7 +90,7 @@ const sendRemoveTeamMemberMail = function(details) {
                             </table>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td bgcolor="#3635C1" style="padding: 30px 30px 30px 30px">
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -112,18 +107,14 @@ const sendRemoveTeamMemberMail = function(details) {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="color: #ffffff; font-family: Roboto, sans-serif; font-size: 14px"
-                                        width="75%">
+                                    <td style="color: #ffffff; font-family: Roboto, sans-serif; font-size: 14px" width="75%">
                                         <b style="color: #fea1be">Riddhi Gupta</b><br />Point of Contact<br />
-                                        <a href="mailto:mailriddhigupta@gmail.com"
-                                            style="color: #ffffff">mailriddhigupta@gmail.com</a><br />
+                                        <a href="mailto:mailriddhigupta@gmail.com" style="color: #ffffff">mailriddhigupta@gmail.com</a><br />
                                         <a href="tel:+919408955501" style="color: #ffffff">+91 9408955501</a><br />
                                     </td>
-                                    <td style="color: #ffffff; font-family: Roboto, sans-serif; font-size: 14px"
-                                        width="75%">
+                                    <td style="color: #ffffff; font-family: Roboto, sans-serif; font-size: 14px" width="75%">
                                         <b style="color: #fea1be">Shubham Srivastava</b><br />Point of Contact<br />
-                                        <a href="mailto:shubhamsriv99@outlook.com"
-                                            style="color: #ffffff">shubhamsriv99@outlook.com</a><br />
+                                        <a href="mailto:shubhamsriv99@outlook.com" style="color: #ffffff">shubhamsriv99@outlook.com</a><br />
                                         <a href="tel:+919818891967" style="color: #ffffff">+91 9818891967</a><br />
                                     </td>
                                 </tr>
@@ -139,11 +130,8 @@ const sendRemoveTeamMemberMail = function(details) {
                                                             font-size: 12px;
                                                             font-weight: bold;
                                                         ">
-                                                    <a href="https://instagram.com/dscvitvellore"
-                                                        style="color: #ffffff">
-                                                        <img src="https://i.ibb.co/fFPCfDh/insta-white.png"
-                                                            alt="Instagram" width="30" height="30"
-                                                            style="display: block" border="0" />
+                                                    <a href="https://instagram.com/dscvitvellore" style="color: #ffffff">
+                                                        <img src="https://i.ibb.co/fFPCfDh/insta-white.png" alt="Instagram" width="30" height="30" style="display: block" border="0" />
                                                     </a>
                                                 </td>
                                                 <td style="font-size: 0; line-height: 0" width="20">&nbsp;</td>
@@ -153,8 +141,7 @@ const sendRemoveTeamMemberMail = function(details) {
                                                             font-weight: bold;
                                                         ">
                                                     <a href="https://facebook.com/dscvitvellore" style="color: #ffffff">
-                                                        <img src="https://i.ibb.co/kBmZDL4/fb-white.png" alt="Facebook"
-                                                            width="30" height="30" style="display: block" border="0" />
+                                                        <img src="https://i.ibb.co/kBmZDL4/fb-white.png" alt="Facebook" width="30" height="30" style="display: block" border="0" />
                                                     </a>
                                                 </td>
                                                 <td style="font-size: 0; line-height: 0" width="20">&nbsp;</td>
@@ -164,9 +151,7 @@ const sendRemoveTeamMemberMail = function(details) {
                                                             font-weight: bold;
                                                         ">
                                                     <a href="https://twitter.com/dscvit" style="color: #ffffff">
-                                                        <img src="https://i.ibb.co/f14BkmM/twitter-white.png"
-                                                            alt="Twitter" width="30" height="30" style="display: block"
-                                                            border="0" />
+                                                        <img src="https://i.ibb.co/f14BkmM/twitter-white.png" alt="Twitter" width="30" height="30" style="display: block" border="0" />
                                                     </a>
                                                 </td>
                                                 <td style="font-size: 0; line-height: 0" width="20">&nbsp;</td>
@@ -175,10 +160,8 @@ const sendRemoveTeamMemberMail = function(details) {
                                                             font-size: 12px;
                                                             font-weight: bold;
                                                         ">
-                                                    <a href="https://www.linkedin.com/company/dscvit/"
-                                                        style="color: #ffffff">
-                                                        <img src="https://i.ibb.co/thkV50w/linkedin.png" alt="LinkedIn"
-                                                            width="30" height="30" style="display: block" border="0" />
+                                                    <a href="https://www.linkedin.com/company/dscvit/" style="color: #ffffff">
+                                                        <img src="https://i.ibb.co/thkV50w/linkedin.png" alt="LinkedIn" width="30" height="30" style="display: block" border="0" />
                                                     </a>
                                                 </td>
                                                 <td style="font-size: 0; line-height: 0" width="20">&nbsp;</td>
@@ -194,9 +177,5 @@ const sendRemoveTeamMemberMail = function(details) {
         </tr>
     </table>
 </body>
- 
-</html>
-    `
-}
 
-module.exports = sendRemoveTeamMemberMail;
+</html>

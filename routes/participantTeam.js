@@ -4,7 +4,7 @@ const router = express.Router();
 const jwtAuth = require('../middlewares/jwtAuthMiddleware');
 const notAdmin = require('../middlewares/notAdminAuthMiddleware');
 const mail = require('./mail');
-const sendIdeathonMail = require('./templates/ideathon');
+// const sendIdeathonMail = require('./templates/ideathon');
 const sendJoinTeamRequest = require('./templates/joinTeamRequest');
 const acceptedAsMember = require('./templates/acceptedAsMember');
 
@@ -16,7 +16,7 @@ router.post('/createTeam', [jwtAuth, notAdmin], async(req, res) => {
 router.post('/joinTeam', [jwtAuth, notAdmin], async(req, res) => {
     const response = await p_t.joinTeam(req.body.teamCode, req.user.authId);
     if (response.teamLeader) {
-        response.teamLeader.password = null;
+        // response.teamLeader.password = "";
         let emails = [response.teamLeader.email];
         let details = { name: response.joinedMember.name };
         let htmlPart = {
