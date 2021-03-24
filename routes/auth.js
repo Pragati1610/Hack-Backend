@@ -46,6 +46,7 @@ router.post('/signup', [
         return res.status(406).send({ message: "User cannot be created" });
     }
 
+
     const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
     req.body.password = bcrypt.hashSync(req.body.password, salt);
     const response = await auth.createUser(req.body);
