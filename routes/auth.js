@@ -4,11 +4,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require("express-validator");
-const { Auth, ParticipantTeam } = require('../models/relations');
+const { Auth } = require('../models/relations');
 const oAuthController = require('../controllers/oAuth');
-const notAdmin = require('../middlewares/notAdminAuthMiddleware');
-const adminAuth = require('../middlewares/adminAuthMiddleware');
-const jwtAuth = require('../middlewares/jwtAuthMiddleware');
 
 function validate(req, res) {
     const error = validationResult(req);
@@ -46,7 +43,6 @@ router.post('/signup', [
         return res.status(406).send({ message: "User cannot be created" });
     }
 
-
     const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
     req.body.password = bcrypt.hashSync(req.body.password, salt);
     const response = await auth.createUser(req.body);
@@ -65,6 +61,7 @@ router.post('/login', async(req, res) => {
     const user = await auth.getAuthByEmail(req.body);
     if (!user.isError) {
         const match = bcrypt.compareSync(req.body.password, user.password);
+        user.password = "";
         const token = jwt.sign(JSON.stringify(user), process.env.JWT_PASS);
         return res.status(match ? 200 : 400).send({ user, token });
     } else {
