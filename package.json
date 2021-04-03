@@ -38,6 +38,7 @@
         "mocha": "^7.2.0",
         "nodemon": "^2.0.6",
         "nyc": "^15.1.0",
-        "semistandard": "^14.2.3"
+        "semistandard": "^14.2.3",
+        "standard": "^16.0.3"
     }
 }
