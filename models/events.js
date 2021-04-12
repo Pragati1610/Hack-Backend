@@ -17,7 +17,7 @@ const schema = {
         type: DataTypes.DATE,
         allowNull: false,
         get: function() {
-            return moment(this.getDataValue('DateTime')).format('DD.MM.YYYY')
+            return moment().format('MMMM Do YYYY, h:mm:ss a');
         }
     },
     maxTeamSize: { type: DataTypes.INTEGER, allowNull: false }
