@@ -14,7 +14,7 @@ xlsxFile('./data.xlsx').then((rows) => {
         };
         let subject = {
             Charset: 'UTF-8',
-            Data: `WomenTechies'21 Participation Certificates
+            Data: `Welcome to Extra Curricular course under DSC VIT!
             `
         }
         mail(emails, htmlPart, subject);

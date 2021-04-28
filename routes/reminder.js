@@ -5,7 +5,7 @@ function sendMail() {
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Women Techies 2021</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
         a {
@@ -19,18 +19,7 @@ function sendMail() {
         <tr>
             <td style="padding: 10px 0 30px 0">
                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse">
-                    <tr>
-                        <td align="center" style="
-                                    color: #000;
-                                    font-size: 28px;
-                                    font-weight: bold;
-                                    font-family: Roboto, sans-serif;
-                                ">
-                            <a href="https://womentechies.dscvit.com/">
-                                <img src="https://i.imgur.com/4KqTkAW.png" alt="Women Techies 2021" width="100%" style="display: block" />
-                            </a>
-                        </td>
-                    </tr>
+
                     <tr>
                         <td style="padding: 40px 30px 0px 30px; color: #000">
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -48,15 +37,12 @@ function sendMail() {
                                                                         font-size: 17px;
                                                                         line-height: 25px;
                                                                     ">
-                                                                <p style="color: #000; font-size: 17px;"><b style="font-size: 20px;">Greetings from DSC-VIT!</b>
-                                                                    <br><br>Thank you for participating and providing WomenTechies’21 with a competitive & healthy environment and raising the bar of the event. <br><br> We hope we were able to guide you
-                                                                    at the hack and provide a fun and learning experience. We wish that you keep up this fiery spirit. Continue to work harder. Build more projects. Collaborate in greater ideas. Work for
-                                                                    a nobler cause. <br><br>We have attached your participation certificate. We would love to see you at our future events with even more fantabulous ideas.
-                                                                    <br>
-                                                                    <a href="https://drive.google.com/drive/folders/1lbNIhGzLoKdMINc7db5GndwMY1Xw0Ecl?usp=sharing">Certificate Drive link</a> <br><br>Here’s something more with your participation in WomenTechies’21
-                                                                    you are eligible for a free subscription of Inside dev! <br>
-                                                                    <a href="https://inside.com/dev?s=free_premium&utm_source=partnership&utm_medium=event&utm_campaign=womentechies21">free subscription of Inside dev</a> <br><br>Best Wishes, <br>Team DSC
-                                                                    VIT.
+                                                                <p style="color: #000; font-size: 17px;"><b style="font-size: 20px;">Hi there!</b>
+                                                                    <br><br> We are glad that you chose to complete your 2 credits extra-curricular course with us! We will be starting a whole set of informative weekly sessions soon, for which we have
+                                                                    created a Microsoft Team. This team will be used for conducting weekly sessions and all communication pertaining to the course will be relayed here. In case you have not been added to
+                                                                    the team, please reply to this email stating so. <br><br>Looking forward to seeing you in the upcoming sessions!
+                                                                    <br><br>Cheers! <br> Team DSC VIT Vellore
+
                                                                 </p>
                                                                 <br>
                                                             </td>
@@ -70,6 +56,7 @@ function sendMail() {
                             </table>
                         </td>
                     </tr>
+
                     <tr>
                         <td style="padding: 30px 30px 30px 30px">
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -133,18 +120,7 @@ function sendMail() {
                         </td>
                     </tr>
 
-                    <tr>
-                        <td align="center" bgcolor="#70bbd9" style="
-                                    color: #000;
-                                    font-size: 28px;
-                                    font-weight: bold;
-                                    font-family: Roboto, sans-serif;
-                                ">
-                            <a href="">
-                                <img src="https://i.imgur.com/hGmiT4Q.png" alt="Women Techies 2021" width="100%" style="display: block" />
-                            </a>
-                        </td>
-                    </tr>
+
                 </table>
             </td>
         </tr>

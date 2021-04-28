@@ -16,9 +16,9 @@ const schema = {
     endOfEvent: {
         type: DataTypes.DATE,
         allowNull: false,
-        get: function() {
-            return moment().format('MMMM Do YYYY, h:mm:ss a');
-        }
+        // get: function() {
+        //     return moment().format('MMMM Do YYYY, h:mm:ss a');
+        // }
     },
     maxTeamSize: { type: DataTypes.INTEGER, allowNull: false }
 };
