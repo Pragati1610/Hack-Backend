@@ -21,7 +21,7 @@ const sendMail = function(emails, htmlPart, subject) {
             CcAddresses: emails,
             ToAddresses: []
         },
-        Source: 'womentechies@dscvit.com ',
+        Source: '2cc@dscvit.com',
 
         ReplyToAddresses: [
             'dscvitvellore@gmail.com'
