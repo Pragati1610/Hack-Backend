@@ -63,7 +63,7 @@ router.post('/login', async(req, res) => {
         const match = bcrypt.compareSync(req.body.password, user.password);
         user.password = "";
         const token = jwt.sign(JSON.stringify(user), process.env.JWT_PASS);
-        return res.status(match ? 200 : 400).send(match ? { user, token } : { message: "Password doesn't match" });
+        return res.status(match ? 200 : 401).send(match ? { user, token } : { message: "Password doesn't match" });
     } else {
         console.log(user)
         return res.status(401).send({ message: "User not authorized", m: user.message })
