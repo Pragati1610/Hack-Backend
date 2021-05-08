@@ -10,7 +10,7 @@ const oAuthController = require('../controllers/oAuth');
 function validate(req, res) {
     const error = validationResult(req);
     if (!error.isEmpty()) {
-        return res.status(422).json({
+        return res.status(400).json({
             error: error.array()
         });
     }

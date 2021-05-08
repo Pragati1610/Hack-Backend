@@ -6,6 +6,7 @@ const schema = {
     eventId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4, primaryKey: true },
     eventName: { type: DataTypes.STRING, allowNull: false },
     problemStatements: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
+    tracks: { type: DataTypes.ARRAY(DataTypes.STRING) },
     dateOfEvent: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -20,7 +21,11 @@ const schema = {
         //     return moment().format('MMMM Do YYYY, h:mm:ss a');
         // }
     },
-    maxTeamSize: { type: DataTypes.INTEGER, allowNull: false }
+    minTeamSize: { type: DataTypes.INTEGER },
+    maxTeamSize: { type: DataTypes.INTEGER, allowNull: false },
+    eventDesc: { type: DataTypes.STRING },
+    regOpen: { type: DataTypes.DATE },
+    regClose: { type: DataTypes.DATE },
 };
 
 const options = {
