@@ -7,6 +7,7 @@ const Scores = require('./scores');
 const Team = require('./team');
 const OverAllScore = require('./overAllScore');
 const ParticipantTeam = require('./participantTeam');
+const EventParticipant = require('./eventParticipant');
 
 Team.Auth = Team.belongsToMany(Auth, {
     through: ParticipantTeam,
@@ -60,6 +61,9 @@ if (process.env.SYNC) {
     OverAllScore.sync({
         alter: true
     });
+    EventParticipant.sync({
+        alter: true
+    })
 }
 
-module.exports = { Auth, Comments, Events, Metrics, Review, Scores, Team, OverAllScore, ParticipantTeam };
+module.exports = { Auth, Comments, Events, Metrics, Review, Scores, Team, OverAllScore, ParticipantTeam, EventParticipant };

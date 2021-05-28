@@ -468,6 +468,19 @@ class ParticipantTeamController {
         }
 
     }
+
+    static async isNotInTeam(eventId) {
+        try {
+            const eventAuths = await EventParticipant
+        } catch (e) {
+            logger.error(e);
+            return {
+                isError: true,
+                message: e.toString()
+            };
+        }
+    }
+
 }
 
 module.exports = ParticipantTeamController;

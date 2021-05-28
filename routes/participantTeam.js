@@ -93,4 +93,9 @@ router.post('/isInTeam', [jwtAuth, notAdmin], async(req, res) => {
     return res.status(response.isError ? 409 : 200).send(response);
 });
 
+router.get('/isNotInTeam/:eventId', [jwtAuth, notAdmin], async(req, res) => {
+    const response = await p_t.isNotInTeam(req.body.eventId);
+    return res.status(response.isError ? 409 : 200).send(response);
+});
+
 module.exports = router;
