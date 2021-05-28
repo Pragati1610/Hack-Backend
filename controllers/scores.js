@@ -51,9 +51,20 @@ class ScoreController {
             const teamId = params.teamId;
             const reviewId = params.reviewId;
 
-            const scores = await Scores.findAll({ where: { teamId: teamId, reviewId: reviewId } });
+            const scores = await Scores.findAll({ where: { teamId: teamId, reviewId: reviewId }, raw: true });
+            let metric;
+            const metrics = await Promise.all(scores.map(async(score) => {
+                metric = await Metrics.findByPk(score.metricId);
+                console.log(metric.metricName);
+                score["mertricName"] = metric.metricName;
+                score["maxScore"] = metric.maxScore;
+                console.log(score)
+                return score
+            }));
+
+
             const comments = await Comments.findOne({ where: { teamId: teamId, reviewId: reviewId } });
-            return { scores, comments };
+            return { metrics, comments };
         } catch (e) {
             logger.error(e);
             return {
