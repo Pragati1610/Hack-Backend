@@ -28,14 +28,18 @@ class TeamController {
                 auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
                 existingMembers = existingMembers.map(extmem => {
                     extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
-                    extmem.auth[0].password = null;
+                    if (extmem.auth[0]) {
+                        extmem.auth[0].password = null;
+                    }
                     return extmem;
                 });
                 waitingMemberIds = waitingMembers.map(member => member.AuthAuthId);
                 auths = await Auth.findAll({ where: { authId: waitingMemberIds }, raw: true });
                 waitingMembers = waitingMembers.map(waitmem => {
                     waitmem['auth'] = auths.filter(auth => auth.authId === waitmem.AuthAuthId);
-                    waitmem.auth[0].password = null;
+                    if (waitmem.auth[0]) {
+                        waitmem.auth[0].password = null;
+                    }
                     return waitmem;
                 });
                 team["existingMembers"] = existingMembers;
