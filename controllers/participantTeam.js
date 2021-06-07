@@ -6,6 +6,15 @@ const logger = require('../logging/logger');
 class ParticipantTeamController {
     static async createTeam(team, authId, eventId) {
         try {
+
+            let event = await Events.findOne({ where: { eventId } })
+            if (!event) {
+                return {
+                    message: "No such event exists",
+                    isError: true
+                }
+            }
+
             let sameTeamName = await Team.findOne({ where: { teamName: team.teamName, eventId } });
             if (sameTeamName) {
                 return {
@@ -13,6 +22,7 @@ class ParticipantTeamController {
                     isError: true
                 }
             }
+
             let existingTeam = await Team.findOne({
                 where: {
                     eventId
@@ -104,11 +114,13 @@ class ParticipantTeamController {
                 const teamLeader = await Auth.findOne({
                     where: {
                         authId: leader.AuthAuthId
-                    }
+                    },
+                    raw: true
                 });
 
                 let joinedMember = await Auth.findOne({ where: { authId }, raw: true });
-                // joinedMember.password = null;
+                await delete joinedMember.password;
+                await delete teamLeader.password;
                 return {
                     message: "Request to join the team has been made",
                     teamLeader,
