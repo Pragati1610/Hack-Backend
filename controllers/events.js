@@ -5,6 +5,28 @@ const { QueryTypes, Sequelize } = require('sequelize');
 class EventsController {
     static async createEvent(event) {
         try {
+
+            if (!event.eventName) {
+                return {
+                    message: "Event needs to have an event name",
+                    isError: true
+                }
+            }
+
+            if (!event.maxTeamSize || !event.minTeamSize || (event.maxTeamSize <= event.minTeamSize)) {
+                return {
+                    message: "Mention team sizes: maxTeamSize and minTeamize with max team size greater than min team size",
+                    isError: true
+                }
+            }
+
+            if (!event.dateOfEvent || !event.endOfEvent) {
+                return {
+                    message: "dateOfEvent and endOfEvent date is needed",
+                    isError: true
+                }
+            }
+
             const reviews = [];
             for (let i = 0; i < event.numberOfReviews; i++) {
                 reviews.push({ reviewNo: i + 1 });
