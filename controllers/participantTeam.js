@@ -152,45 +152,44 @@ class ParticipantTeamController {
                 }
             }
             let leader = await ParticipantTeam.findOne({ where: { TeamTeamId: teamId, AuthAuthId: authId, isLeader: true } });
+
+            let existingMembers = await ParticipantTeam.findAll({
+                where: {
+                    TeamTeamId: teamId,
+                    isWaiting: false
+                },
+                raw: true
+            });
+            let waitingMembers = await ParticipantTeam.findAll({
+                where: {
+                    TeamTeamId: teamId,
+                    isWaiting: true
+                },
+                include: [{ all: true }],
+                raw: true
+            });
+            const existingMemberIds = existingMembers.map(member => member.AuthAuthId);
+            let auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
+            existingMembers = existingMembers.map(extmem => {
+                extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
+                extmem.password = null;
+                extmem.auth[0].password = null;
+                return extmem;
+            });
+            const waitingMemberIds = waitingMembers.map(member => member.AuthAuthId);
+            auths = await Auth.findAll({ where: { authId: waitingMemberIds }, raw: true });
+            waitingMembers = waitingMembers.map(waitmem => {
+                waitmem['auth'] = auths.filter(auth => auth.authId === waitmem.AuthAuthId);
+                waitmem.password = null;
+                waitmem.auth[0].password = null;
+                return waitmem;
+            });
+
             if (!leader) {
                 return {
-                    isError: true,
-                    message: "You are not authorized to access these resources"
+                    existingMembers
                 }
             } else {
-
-                let existingMembers = await ParticipantTeam.findAll({
-                    where: {
-                        TeamTeamId: teamId,
-                        isWaiting: false
-                    },
-                    raw: true
-                });
-                let waitingMembers = await ParticipantTeam.findAll({
-                    where: {
-                        TeamTeamId: teamId,
-                        isWaiting: true
-                    },
-                    include: [{ all: true }],
-                    raw: true
-                });
-                const existingMemberIds = existingMembers.map(member => member.AuthAuthId);
-                let auths = await Auth.findAll({ where: { authId: existingMemberIds }, raw: true });
-                existingMembers = existingMembers.map(extmem => {
-                    extmem['auth'] = auths.filter(auth => auth.authId === extmem.AuthAuthId);
-                    extmem.password = null;
-                    extmem.auth[0].password = null;
-                    return extmem;
-                });
-                const waitingMemberIds = waitingMembers.map(member => member.AuthAuthId);
-                auths = await Auth.findAll({ where: { authId: waitingMemberIds }, raw: true });
-                waitingMembers = waitingMembers.map(waitmem => {
-                    waitmem['auth'] = auths.filter(auth => auth.authId === waitmem.AuthAuthId);
-                    waitmem.password = null;
-                    waitmem.auth[0].password = null;
-                    return waitmem;
-                });
-
                 return {
                     waitingMembers,
                     existingMembers
