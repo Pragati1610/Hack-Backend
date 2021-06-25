@@ -5,7 +5,6 @@ const { QueryTypes, Sequelize } = require('sequelize');
 class EventsController {
     static async createEvent(event) {
         try {
-
             if (!event.eventName) {
                 return {
                     message: "Event needs to have an event name",
@@ -56,6 +55,7 @@ class EventsController {
             const event = await Events.findByPk(eventId);
             const review = await Review.findAll({ where: { eventId } });
             const metric = await Metrics.findAll({ where: { eventId } });
+            console.log(event)
             return { event, review, metric };
         } catch (e) {
             logger.error(e);
