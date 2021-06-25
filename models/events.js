@@ -10,9 +10,9 @@ const schema = {
     dateOfEvent: {
         type: DataTypes.DATE,
         allowNull: false,
-        get: function() {
-            return moment(this.getDataValue('DateTime')).format('DD.MM.YYYY')
-        }
+        // get: function() {
+        //     return moment(this.getDataValue('DateTime')).format('DD.MM.YYYY')
+        // }
     },
     endOfEvent: {
         type: DataTypes.DATE,
