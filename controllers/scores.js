@@ -5,7 +5,7 @@ class ScoreController {
     static async createTeamScore(data) {
         try {
             const review = await Review.findOne({ where: { eventId: data.eventId, reviewNo: data.reviewNo } });
-            const scores = data.scores.map(score => {
+            let scores = data.scores.map(score => {
                 score["reviewId"] = review.reviewId;
                 score["teamId"] = data.teamId;
                 return score;
@@ -27,7 +27,13 @@ class ScoreController {
                 "colorCode": data.colorCode
             };
 
-            const createdScore = await Scores.bulkCreate(scores);
+            let createdScore = [];
+
+            await Promise.all(scores.map(async(score) => {
+                createdScore.push(await Scores.create(score))
+            }));
+
+            // const createdScore = await Scores.bulkCreate(scores);
             const createdComments = await Comments.create(comments);
             const overAllScore = await OverAllScore.create(finalScore);
             return {
