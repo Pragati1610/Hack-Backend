@@ -15,7 +15,7 @@ class AuthController {
             const createdAuth = await Auth.create(auth, {
                 attributes: { exclude: ['password'] }
             });
-            createdAuth.password = null;
+            createdAuth.password = null
             return {
                 message: 'Auth created',
                 createdAuth,

@@ -117,17 +117,26 @@ class TeamController {
             let totalScore;
 
             if (review.reviewNo === 1) {
+                console.log("1")
                 totalScore = await OverAllScore.findAll({
                     where: { reviewId: data.reviewId },
                     raw: true
                 });
             } else {
-                const preReview = await Review.findOne({ where: { eventId: review.eventId, reviewNo: review.reviewNo - 1 } });
-
+                console.log("n")
+                const preReview = await Review.findOne({ where: { eventId: review.eventId, reviewNo: review.reviewNo - 1 }, raw: true });
+                console.log(preReview)
                 const prevTotalScore = (await OverAllScore.findAll({
                     where: { reviewId: preReview.reviewId, qualified: true },
                     raw: true
                 })).map(score => score.teamId);
+                console.log(prevTotalScore)
+                if (!prevTotalScore) {
+                    return {
+                        message: `${review.reviewNo -1} needs to be evaluated and completed before ${review.reviewNo}`,
+                        isError: true
+                    }
+                }
 
                 totalScore = (await OverAllScore.findAll({
                     where: { reviewId: data.reviewId },
