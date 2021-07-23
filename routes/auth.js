@@ -7,14 +7,10 @@ const { check, validationResult } = require("express-validator");
 const { Auth } = require('../models/relations');
 const oAuthController = require('../controllers/oAuth');
 
-function validate(req, res) {
-    const error = validationResult(req);
-    if (!error.isEmpty()) {
-        return res.status(400).json({
-            error: error.array()
-        });
-    }
-}
+function checkPassword(password) {
+    const re = new RegExp(`^[A-Za-z0-9_@./#&+-]{8,32}$`)
+    return re.test(password)
+};
 
 router.post('/oAuth', async(req, res) => {
     const user = await oAuthController.createUser(req.body.idToken);
@@ -30,17 +26,16 @@ router.post('/oAuth', async(req, res) => {
     return res.status(user.isError ? 400 : 201).send(user);
 });
 
-router.post('/signup', [
-    check("email").isEmail(),
-    check("password").isLength({ min: 8, max: 32 }),
-    check("isAdmin").isBoolean()
-], async(req, res) => {
-
-    validate(req, res);
-
+router.post('/signup', async(req, res) => {
     console.log(req.body.isAdmin)
     if (req.body.isAdmin === true) {
         return res.status(406).send({ message: "User cannot be created" });
+    }
+
+    if (!(req.body.password) || !checkPassword(req.body.password)) {
+        return res.status(400).send({
+            message: "Valid password required"
+        });
     }
 
     const salt = bcrypt.genSaltSync(parseInt(process.env.SALT));
@@ -61,7 +56,7 @@ router.post('/login', async(req, res) => {
     const user = await auth.getAuthByEmail(req.body);
     if (!user.isError) {
         const match = bcrypt.compareSync(req.body.password, user.password);
-        user.password = "";
+        user.password = null;
         const token = jwt.sign(JSON.stringify(user), process.env.JWT_PASS);
         return res.status(match ? 200 : 401).send(match ? { user, token } : { message: "Password doesn't match" });
     } else {
